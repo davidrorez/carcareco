@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import Search from "../_components/Search";
-import 'car-makes-icons/dist/style.css';
+// import 'car-makes-icons/dist/style.css';
 import { SearchCardHeader } from "../_components/SearchCardHeader";
 import Main from "../_components/Main";
 import SimpleSearchBar from "../_components/SimpleSearchBar";

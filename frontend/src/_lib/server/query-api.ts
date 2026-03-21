@@ -26,6 +26,7 @@ async function apiCall({
     requestHeaders["Authorization"] =  'Bearer ' + jwt;
   } 
   const fullUrl = process.env.API_URL +`/api/${url}`;
+  console.log(`Making ${method} request to: ${fullUrl}`);
   const request = {
     method,
     headers: requestHeaders,

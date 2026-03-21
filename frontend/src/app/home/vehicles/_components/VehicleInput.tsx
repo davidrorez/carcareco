@@ -62,7 +62,7 @@ export default function VehicleInput({
                         <div className="sm:col-span-2">  <FormInput name='model' defaultValue={vehicle?.model} label='Vehicle model'></FormInput></div>
                         <div className="sm:col-span-2">  <FormInput name='vin' defaultValue={vehicle?.vin} label='VIN Code'></FormInput></div>
                         <div className="sm:col-span-2">  <FormInput name='regNr' defaultValue={vehicle?.regNr} label='Registration nr'></FormInput></div>
-                        <div className="sm:col-span-2">  <FormInput name='odo' defaultValue={vehicle?.odo} label='Odometer'></FormInput> </div>
+                        <div className="sm:col-span-2">  <FormInput name='odo' defaultValue={vehicle?.odo} label='Odometer' type='number'></FormInput> </div>
                         <div className="col-span-full">
                             <FormLabel name='ownerId' label='Owner'></FormLabel>
                             <ClientsCombobox  

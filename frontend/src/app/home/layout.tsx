@@ -28,7 +28,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
         redirect('/home/logout');
     }
 
-    const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/users/profilepicture/${jwt}`
+    const imageUrl = `${process.env.API_URL}/api/users/profilepicture/${jwt}`
     return (
         <>
             {/* <Timeout></Timeout> */}
