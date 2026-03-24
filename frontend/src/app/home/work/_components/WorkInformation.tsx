@@ -32,6 +32,12 @@ export function WorkInformation({
     hasRepairJobWithProductsOrServices: boolean
 }) {
 
+    const [date, setDate] = React.useState<string | null>(null);
+
+    React.useEffect(() => {
+    setDate(moment(work.startedOn).format('LLL'));
+    }, [work.startedOn]);
+
     const editPath = '/home/work/edit/' + work.id;
  
     const vehicleSummary = [work.vehicleProducer, work.vehicleModel, work.vehicleVin, work.vehicleRegNr].filter(x => x).join(', ');
@@ -122,7 +128,9 @@ export function WorkInformation({
                             <WorkStatusBadge   status={work.status}></WorkStatusBadge> 
                         </dt>
                         <dd className="text-sm/6 text-gray-500">
-                            <time dateTime="2023-01-31">{moment(work.startedOn).format('LLL')}</time>
+                            <time dateTime={new Date(work.startedOn).toISOString()}>
+                            {date ?? '—'}
+                            </time>
                         </dd>
                     </div>
                      
@@ -149,7 +157,7 @@ export function WorkInformation({
                             <TruckIcon aria-hidden="true" className="h-6 w-5 text-gray-400" />
                         </dt>
                         <dd className="text-sm/6 text-gray-500">
-                            <time dateTime="2023-01-31">{vehicleSummary}</time>
+                            <span>{vehicleSummary}</span>
                         </dd>
                     </div>}
                     {work.mechanics?.length > 0 &&
