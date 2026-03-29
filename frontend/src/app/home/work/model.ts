@@ -7,11 +7,13 @@ export interface IWorkData extends IActivity{
     clientAddress:   string;
     clientEmail:     string;
     clientPhone:     string;
-    vehicleId:       string;
-    vehicleProducer: string;
-    vehicleModel:    string;
-    vehicleVin:      string;
-    vehicleRegNr:    string;
+    vehicleInfo:     string;
+    // VehicleName:     string;
+    // vehicleId:       string;
+    // vehicleProducer: string;
+    // vehicleModel:    string;
+    // vehicleVin:      string;
+    // vehicleRegNr:    string;
     notes:           string;
     odo:             number;
     mechanics:       IMechanic[];

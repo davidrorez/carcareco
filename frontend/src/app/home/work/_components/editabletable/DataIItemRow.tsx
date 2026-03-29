@@ -7,7 +7,7 @@ import { XMarkIcon } from "@heroicons/react/16/solid";
 import clsx from "clsx"; 
 import { IProduct } from "../../model";
 import { Bars3Icon } from "@heroicons/react/20/solid";
-import { EditableCodeCell } from "./EditableCodeCell";
+// import { EditableCodeCell } from "./EditableCodeCell";
 
 export type DataItemRowHandle<T> = {
     
@@ -53,7 +53,7 @@ const DataItemRow = React.forwardRef<DataItemRowHandle<IProduct>, IDataItemRowPr
                 id: item?.id,
                 code: codeRef.current?.getValue()??'',
                 name: nameRef.current?.getValue()??'',
-                price: priceRef.current?.getValue()??null,
+                price: priceRef.current?.getValue()??1,
                 unit: unitRef.current?.getValue()??'',
                 quantity: quantityRef.current?.getValue()??null,
                 discount: discountRef.current?.getValue()??null,
@@ -66,7 +66,7 @@ const DataItemRow = React.forwardRef<DataItemRowHandle<IProduct>, IDataItemRowPr
  
     const textSize = clsx(  "font-medium  text-sm/7  px-2  outline-1 -outline-offset-1 outline-gray-300   focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600  " );
     const pricePropsClass = clsx(textSize, "text-right ");
-    const codeStyle = clsx(textSize,   "w-full");
+    // const codeStyle = clsx(textSize,   "w-full");
     const nameStyle = clsx( textSize, "w-full ");
     const tdStyle = isEditing ? "py-0 pr-3 pl-4 text-sm  whitespace-nowrap text-gray-500 sm:pl-0" : "px-2 py-2 text-sm whitespace-nowrap text-gray-900";
    
@@ -90,9 +90,10 @@ const DataItemRow = React.forwardRef<DataItemRowHandle<IProduct>, IDataItemRowPr
             </button>
         </td>
         </>}
-       
+        {/*
         <td className={clsx("min-w-50 w-50",tdStyle)} >
           
+
             <EditableCodeCell //todo auto complete 
                 placeholder="code ..."
                 defaultValue={item.code}
@@ -105,8 +106,11 @@ const DataItemRow = React.forwardRef<DataItemRowHandle<IProduct>, IDataItemRowPr
                 priceRef={priceRef}
             >
             </EditableCodeCell>
+
+
         </td>
-        <td className={clsx("min-w-50",tdStyle)}  > 
+        */}
+        <td className={clsx("min-w-50 text-start",tdStyle)}  > 
                 <EditableTextCell
                     id={item.id}
                     name='name'
@@ -119,6 +123,7 @@ const DataItemRow = React.forwardRef<DataItemRowHandle<IProduct>, IDataItemRowPr
                 >
                 </EditableTextCell> 
         </td>
+        {/*
         <td className={clsx("w-20 text-end",tdStyle)}  >
         <EditableNumberCell
                     id={item.id}
@@ -132,7 +137,9 @@ const DataItemRow = React.forwardRef<DataItemRowHandle<IProduct>, IDataItemRowPr
                         ref={priceRef}
                         isEditing={isEditing}></EditableNumberCell>
         </td>
-        <td className={clsx("w-15  text-end",tdStyle)}  >
+        */}
+
+       <td className={clsx("w-15  text-end",tdStyle)}  >
         <EditableNumberCell   
                         placeholder=""
                         ref={quantityRef}
@@ -144,6 +151,8 @@ const DataItemRow = React.forwardRef<DataItemRowHandle<IProduct>, IDataItemRowPr
                         isEditing={isEditing}>
                     </EditableNumberCell> 
             </td>
+
+            {/*
             <td className={clsx("w-15  text-end",tdStyle)}  >
             <EditableTextCell  
                     id={item.id}
@@ -153,6 +162,9 @@ const DataItemRow = React.forwardRef<DataItemRowHandle<IProduct>, IDataItemRowPr
                         className={clsx("w-15",pricePropsClass)}
                         defaultValue={item.unit} isEditing={isEditing}></EditableTextCell>
             </td>
+            */ }
+
+            {/*
             <td className={clsx("w-15  text-end",tdStyle)}  >
                  <EditableNumberCell 
                     id={item.id}
@@ -164,6 +176,7 @@ const DataItemRow = React.forwardRef<DataItemRowHandle<IProduct>, IDataItemRowPr
                          placeholder="" isPercentage={true} isEditing={isEditing}>
                     </EditableNumberCell>
             </td>
+            */}
       
         {isEditing && <td className="w-10 text-right text-end">
             <Link color="link" href="#" 

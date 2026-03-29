@@ -6,15 +6,10 @@ import PrimaryButton from '@/_components/PrimaryButton';
 import SecondaryButton from '@/_components/SecondaryButton';
 import { IWorkData, IMechanic } from '../model';
 import FormLabel from '@/_components/FormLabel';
-import { ClientsCombobox, VehiclesCombobox } from '../../_components/SearchCombobox';
 import { useState } from 'react';
 import FormSwitch from '@/_components/FormSwitch';
 import { Field, Label } from '@headlessui/react';
-import { query } from '@/_lib/client/query-api';
-import { IVehicleData } from '../../vehicles/model';
 import FormInput from '@/_components/FormInput';
-import Select from '@/_components/Select';
-import clsx from 'clsx';
 import WorkInputMechanics from './WorkInputMechanics';
 
 
@@ -32,11 +27,12 @@ export default function WorkInput({
    
     const [isOffer, setIsOffer] = useState(false);
 
-    const [onlyClientVehicles, setOnlyClientVehicles] = useState(!work ? true : false);
+    // const [onlyClientVehicles, setOnlyClientVehicles] = useState(!work ? true : false);
 
-    const [clientVehicles, setClientVehicles] = useState<IVehicleData[]>([]);
-    const [selectedClientVehicleId, setSelectedClientVehicleId] = useState(work?.vehicleId ?? '');
-    const [clientUndisclosed, setClientUndisclosed] = useState(!work ? false : !work.clientId);
+    // const [clientVehicles, setClientVehicles] = useState<IVehicleData[]>([]);
+    // const [selectedClientVehicleId, setSelectedClientVehicleId] = useState(work?.vehicleId ?? '');
+    // const [clientUndisclosed, setClientUndisclosed] = useState(!work ? false : !work.clientId);
+    /*
     const populateClientVehicles = (clientId: string) => {
         query({
             url: 'vehicles/client/' + clientId,
@@ -57,6 +53,7 @@ export default function WorkInput({
             }
         });
     }
+    */
 
     return (
         <>
@@ -81,20 +78,8 @@ export default function WorkInput({
                         </div>}
 
                         <div className=" ">
-                            <FormLabel name='clientId' label='Client'>
-                                <span className="ml-4 float-right text-gray-500">
-                                    Undisclosed{' '}
-                                    <FormSwitch
-                                        name='clientUndisclosed'
-                                        small={true}
-                                        checked={clientUndisclosed}
-                                        onChange={(value) => {
-                                            setClientUndisclosed(value);
-                                            setOnlyClientVehicles(!value);
-                                        }}></FormSwitch>
-                                </span>
-                            </FormLabel>
-                            {!clientUndisclosed &&
+                            <FormInput name='clientName' defaultValue={work?.clientName} label='Client Name'></FormInput>
+                            {/*!clientUndisclosed &&
                                 <ClientsCombobox name='clientId'
                                     onItemChange={(item) => {
                                         if (onlyClientVehicles && item) {
@@ -105,49 +90,17 @@ export default function WorkInput({
                                         text: work?.clientName ?? '',
                                         value: work?.clientId ?? '',
                                     }}>
-                                </ClientsCombobox>}
+                                </ClientsCombobox>*/}
 
                         </div>
                         <div className='  ' >
-                            <FormLabel name='vehicleId' label='Vehicle'>
-                                {!clientUndisclosed && <span className="ml-2 float-right text-gray-500">
-                                    Search all vehicles{' '}
-                                    <FormSwitch
-                                        name='onlyClientVehicles'
-                                        small={true}
-                                        checked={!onlyClientVehicles}
-                                        onChange={(value) => {
-                                            setOnlyClientVehicles(!value);
-                                        }}></FormSwitch>{' '}
-                                </span>}
 
-                            </FormLabel>
                             <div className='flex'>
 
                                 <div className="-mr-px grid grow grid-cols-1 focus-within:relative">
-                                    <div className= {clsx(onlyClientVehicles&&"mt-2", " sm:col-span-2   grid grid-cols-1")}> 
-                                        {onlyClientVehicles ?
-                                            <Select
-                                                name='vehicleId'
-                                                value={selectedClientVehicleId}
-                                                onChange={(e) => {
-                                                    setSelectedClientVehicleId(e.currentTarget.value);
-                                                }} >
-                                                {clientVehicles?.map((item, index) => {
-                                                    return (<option key={index} value={item.id}>{[item?.producer, item?.model].filter(x => x).join(' ') + (!item?.regNr ? '' : ` (${item.regNr})`)}</option>)
-                                                })}
-                                            </Select> :
-                                            <VehiclesCombobox name='vehicleId'
-
-                                                defaultValue={{
-                                                    text: [work?.vehicleProducer, work?.vehicleModel].filter(x => x).join(' ') + (!work?.vehicleRegNr ? '' : `(${work?.vehicleRegNr})`),
-                                                    value: work?.vehicleId ?? '',
-                                                }}>
-                                            </VehiclesCombobox>}
+                                    <div className="sm:col-span-2   grid grid-cols-1"> 
+                                        <FormInput name='vehicleInfo' defaultValue={work?.vehicleInfo} label='Vehicle Info'></FormInput>
                                     </div>
-                                </div>
-                                <div className='ml-2  '>
-                                    <FormInput type='number' placeholder='Odometer value' name='odo' defaultValue={work?.odo ?? 0}></FormInput>
                                 </div>
                             </div>
 

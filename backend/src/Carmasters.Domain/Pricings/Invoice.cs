@@ -47,7 +47,7 @@ namespace Carmasters.Core.Domain
         {
             var invoice = new Invoice(numberProvider.Next(), issuer, DateTime.Now,paymentType, dueDays,null);
             
-            invoice.ApplyClientInformation(work.Client);
+            invoice.ApplyClientInformation(work.ClientName);
             invoice.ApplyVehicleInformation(null);
 
             int counter = 1;

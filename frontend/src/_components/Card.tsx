@@ -10,7 +10,7 @@ export function CardHeader({
     children?: React.ReactNode
 }) {
     return (
-        <div className=" py-2  px-2 pt-8  xl:py-4  xl:pt-8 xl:px-6">
+        <div className=" py-2  px-2 pt-8  xl:py-4  xl:pt-8 xl:px-2">
 
             <div className="-mt-2  flex items-center justify-between  flex-nowrap">
                 {title && <div className="xl:mt-2  pb-2">

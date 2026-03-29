@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Carmasters.Core.Domain.utils;
+using System;
 
 namespace Carmasters.Core.Domain
 {
@@ -46,22 +47,28 @@ namespace Carmasters.Core.Domain
             this.storage = storage;
         }
 
-        
+
         private void SetValues(string code, string name, decimal price, decimal quantity, short? discount, string description)
         {
-            if (string.IsNullOrWhiteSpace(code) && string.IsNullOrWhiteSpace(name)) throw new UserException("Either name or code is required.");
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                code = CodeGenerator.Generate(name);
+            }
+
+            if (string.IsNullOrWhiteSpace(code) && string.IsNullOrWhiteSpace(name))
+                throw new UserException("Either name or code is required.");
+
             this.Description = description;
             this.code = code;
             this.name = name;
-            this.price = price;
             this.quantity = quantity;
-            this.discount = discount; 
+            this.price = price > 0 ? price : 0m;
+            this.discount = discount ?? 0;
         }
-         
+
         public  virtual void Edit(string code, string name, decimal price, decimal quantity, short? discount,string description)
         {
             this.SetValues(code, name, price, quantity, discount,description);
         }
-         
     }
 }

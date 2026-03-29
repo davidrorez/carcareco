@@ -314,11 +314,13 @@ namespace Carmasters.Core.Persistence.Postgres.Repositories
 
             Map(x => x.Number).Column("number").Access.BackingField().Unique();
             Map(x => x.StartedOn).Column("startedon").CustomType<UtcDateType>();//.HasConversion<DateTimeUtcConverter>();
-            References(x => x.Invoice).Column("invoiceid").Access.BackingField().Cascade.SaveUpdate(); 
-            References(x => x.Client).Column("clientid").Access.LowerCaseField();
+            References(x => x.Invoice).Column("invoiceid").Access.BackingField().Cascade.SaveUpdate();
+            // References(x => x.Client).Column("clientid").Access.LowerCaseField();
+            Map(x => x.ClientName);
+            Map(x => x.VehicleInfo);
             References(x => x.Starter).Column("starterid").Access.BackingField();
              
-            References(x => x.Vehicle).Column("vehicleid").Access.BackingField(); 
+            //References(x => x.Vehicle).Column("vehicleid").Access.BackingField(); 
           
             HasMany(x => x.Offers).KeyColumn("workid").Access.LowerCaseField().Cascade.AllDeleteOrphan().Inverse().LazyLoad();
             HasMany(x => x.Jobs).KeyColumn("workid").Access.LowerCaseField().Cascade.AllDeleteOrphan().Inverse().LazyLoad();

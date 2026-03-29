@@ -40,7 +40,7 @@ export default function Activity({
     const applyDiscountsRef = React.useRef<BaseDialogHandle>(null);
     const issueOfferRef = React.useRef<BaseDialogHandle>(null);
     const offerAcceptedRef = React.useRef<BaseDialogHandle>(null);
-     const sendOfferRef = React.useRef<BaseDialogHandle>(null);
+    const sendOfferRef = React.useRef<BaseDialogHandle>(null);
     const [data, setData] = React.useState<IProduct[]>(activities.current.products);
     const tableRef = useRef<DataItemRowHandle<IProduct>[] | null[]>([]);
     const pathCancel = `/home/work/${work.id}/${activities.current.id}`
@@ -105,7 +105,7 @@ export default function Activity({
         for (let i = 1; i <= count; i++) {
             const negValue = data.filter(x=>x.id.startsWith('-')).map(o => +o.id);
             const nextId = (negValue.length>0 ? Math.min(...negValue) : 0)-1 
-            data.push({ id: nextId.toString(), code: '', discount: null, name: '', price: null, quantity: 1, unit: 'tk' })
+            data.push({ id: nextId.toString(), code: '', discount: null, name: '', price: 1, quantity: 1, unit: 'tk' })
         }
         setData([...data])
        
@@ -133,12 +133,12 @@ export default function Activity({
             {activityIsOffer&& <IssueOfferDialog dialogRef={issueOfferRef} work={work}   activities={activities} ></IssueOfferDialog>}
             {activityIsOffer&&issuance&& <SendPricingDialog work={work} offerId={issuance.id}  dialogRef={sendOfferRef}></SendPricingDialog>}
             <div className="xl:flex xl:items-end">
-                <div className="xl:flex-auto xl:px-4  ">
+                <div className="xl:flex-auto xl:px-4">
                     <ActivityNotes notes={activities.current.notes} edit={edit} ></ActivityNotes>
                 </div>
             </div>
             <Saleables
-                edit={edit} data={data} priceSummary={activities.current.priceSummary} tableRef={tableRef} removeItem={removeItem} refreshData={setData} >
+                edit={edit} data={data} tableRef={tableRef} removeItem={removeItem} refreshData={setData} >
             </Saleables>
             <div className="xl:flex inline-flex float-right xl:items-center">
                 <div className="xl:flex-auto mt-8 inline-flex">

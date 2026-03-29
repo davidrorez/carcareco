@@ -5,6 +5,7 @@ using Carmasters.Core.Application.Extensions;
 using Carmasters.Core.Application.RateLimiting;
 using Carmasters.Core.Application.Services;
 using Carmasters.Core.Domain;
+using Carmasters.Core.Domain.utils;
 using Carmasters.Http.Api.Model;
 using Carmasters.Http.Api.Models;
 using Dapper;
@@ -66,16 +67,17 @@ namespace Carmasters.Http.Api.Controllers
                 StartedBy = work.Starter?.Name,
                 Name="work",
                 IsEmpty = !(work.Jobs.Any(x=>x.Products.Any()) || work.Offers.Any(x=>x.Products.Any())), // todo optimize?
-                ClientId = work.Client?.Id,
-                ClientName = work.Client?.Name,
-                ClientAddress = work.Client?.Address?.ToString(),//TODO
-                ClientEmail = work.Client?.CurrentEmail,
-                ClientPhone = work.Client?.Phone,
-                VehicleId = work.Vehicle?.Id,
-                VehicleProducer = work.Vehicle?.Producer,
-                VehicleModel = work.Vehicle?.Model,
-                VehicleVin = work.Vehicle?.Vin,
-                VehicleRegNr = work.Vehicle?.RegNr,
+                // ClientId = work.Client?.Id,
+                work.ClientName,
+                work.VehicleInfo,
+                // ClientAddress = work.Client?.Address?.ToString(),//TODO
+                // ClientEmail = work.Client?.CurrentEmail,
+                // ClientPhone = work.Client?.Phone,
+                // VehicleId = work.Vehicle?.Id,
+                // VehicleProducer = work.Vehicle?.Producer,
+                // VehicleModel = work.Vehicle?.Model,
+                // VehicleVin = work.Vehicle?.Vin,
+                // VehicleRegNr = work.Vehicle?.RegNr,
                 work.Notes,
                 work.Odo,
                 Mechanics = work.Mechanics.ToList().Select(x => new { x.Id, x.Name }).ToArray(),
@@ -158,10 +160,10 @@ namespace Carmasters.Http.Api.Controllers
             var work = Work.Start(
                 numberProviderFactory,
                 starter,
-                repository.Get<Client>(model.ClientId.GetValueOrDefault(), false),
-                 repository.Get<Vehicle>(model.VehicleId.GetValueOrDefault(), false),
-                 model.StartWithOffer ? null : model.Description,
-                 model.Odo);
+                model.ClientName,
+                model.VehicleInfo,
+                model.StartWithOffer ? null : model.Description,
+                model.Odo);
 
             if (model.AssignedTo != null) work.Assign(model.AssignedTo.Select(x => repository.Get<Employee>(x)).ToArray());
              
@@ -193,20 +195,18 @@ namespace Carmasters.Http.Api.Controllers
         public virtual OkObjectResult Put(Guid id, [FromBody] PostOrPutWork model)
         {
             var work = repository.Get<Work>(id);
-            if (model.ClientId is not null)
+            if (model.ClientName is not null)
             {
-                var client = repository.Get<Client>(model.ClientId.Value);
-                work.IsFor(client);
+                work.IsFor(model.ClientName);
             }
             else
             {
                 work.IsForPrivateClient();
             }
 
-            if (model.VehicleId is not null)
+            if (model.VehicleInfo is not null)
             {
-                var vehicle = repository.Get<Vehicle>(model.VehicleId.Value);
-                work.DoneOn(vehicle);
+                work.DoneOn(model.VehicleInfo);
             }
             else
             {
@@ -229,10 +229,12 @@ namespace Carmasters.Http.Api.Controllers
             foreach (var id in ids)
             {
                 var dObj = repository.Get<Work>(id); 
+                /*
                 if(dObj.Offers.Any(x=>x.Estimate!=null && x.Estimate.SentOn != null)) 
                 {
                     throw new UserException("Cannot delete work, it contains an offer sent to a client.");
                 }
+                */
                 
                 if(dObj.Invoice!=null && dObj.Invoice.SentOn != null)
                 {
@@ -258,8 +260,8 @@ namespace Carmasters.Http.Api.Controllers
             DateTime? invoiceTo )
         {
             var onlyIssued = issued == "on" ;
-            var clientId  = Request.Query["clientiId[value]"].FirstOrDefault();
-            var vehicleId = Request.Query["vehicleId[value]"].FirstOrDefault();
+            // var clientId  = Request.Query["clientiId[value]"].FirstOrDefault();
+            // var vehicleId = Request.Query["vehicleId[value]"].FirstOrDefault();
             orderby = onlyIssued? "i.number": "w.changedon";
 
              
@@ -285,10 +287,10 @@ namespace Carmasters.Http.Api.Controllers
                     query.Where(@"i.ispaid = false and (ip.issuedon + i.duedays * interval '1 day' <=  current_timestamp)");
 
             }
-          
-            if (clientId  != null) query.Where($"w.clientid = '{clientId }'");
-            if (vehicleId != null ) query.Where($"w.vehicleid = '{vehicleId}' ");
-            if (workForm is not null || workForm is not null)
+
+            // if (clientId  != null) query.Where($"w.clientid = '{clientId }'");
+            // if (vehicleId != null ) query.Where($"w.vehicleid = '{vehicleId}' ");
+            if (workForm is not null || workTo is not null)
             { 
                 var dateRestriction = @" work.startedon {0})";
                 if (invoiceTo is null)
@@ -305,22 +307,23 @@ namespace Carmasters.Http.Api.Controllers
                 }
                 query.Where(dateRestriction);
             }
-            if (invoiceFrom is not null || invoiceTo is not null)
+            if (workForm is not null || workTo is not null)
             {
-               
-                var dateRestriction = @"ip.issuedon {0}";
-                if (invoiceTo is null)
+                var dateRestriction = @" work.startedon {0}";
+
+                if (workTo is null)
                 {
-                    dateRestriction = string.Format(dateRestriction, $" >= '{pgDate(invoiceFrom)}'");
+                    dateRestriction = string.Format(dateRestriction, $" >= '{pgDate(workForm)}'");
                 }
-                else if (invoiceFrom is null)
+                else if (workForm is null)
                 {
-                    dateRestriction = string.Format(dateRestriction, $" < '{pgDate(invoiceTo)}'");
+                    dateRestriction = string.Format(dateRestriction, $" < '{pgDate(workTo)}'");
                 }
                 else
                 {
-                    dateRestriction = string.Format(dateRestriction, $" between '{pgDate(invoiceFrom)}' and '{pgDate(invoiceTo)}' ");
+                    dateRestriction = string.Format(dateRestriction, $" between '{pgDate(workForm)}' and '{pgDate(workTo)}'");
                 }
+
                 query.Where(dateRestriction);
             }
             if (!string.IsNullOrWhiteSpace(saleable))
@@ -329,54 +332,54 @@ namespace Carmasters.Http.Api.Controllers
                 
                 var productTokens = string.Join(" and ", tokens.Select(word => $"concat_ws(' ',p.code,s.name) ilike '%{word}%'"));
                 var restriction = onlyIssued ?
-$@" exists (select * from domain.productinstalled p 
-                        inner join domain.saleable s on s.id = p.id 
-                        inner join domain.repairjob rj on rj.id = p.repairjobid
-                        where rj.workid = w.id and {productTokens}) ": 
-$@" exists (select * from domain.productoffered p 
-                        inner join domain.saleable s on s.id = p.id 
-                        inner join domain.offer offer on offer.id= p.offerid
-                        where offer.workid = w.id and {productTokens}) ";
+                $@" exists (select * from domain.productinstalled p 
+                                        inner join domain.saleable s on s.id = p.id 
+                                        inner join domain.repairjob rj on rj.id = p.repairjobid
+                                        where rj.workid = w.id and {productTokens}) ": 
+                $@" exists (select * from domain.productoffered p 
+                                        inner join domain.saleable s on s.id = p.id 
+                                        inner join domain.offer offer on offer.id= p.offerid
+                                        where offer.workid = w.id and {productTokens}) ";
                  
                 query.Where(restriction);
             }
 
 
             var issuanceSql =
-$@"json_build_object(
-	'invoiceNumber',i.number, 
-	'isPaid',i.ispaid, 
-	'dueDays',i.duedays,
-	'issuedOn',ip.issuedon,
-    'issuedBy',concat_ws(' ',ii.firstname,ii.lastname) ,
-	'sentOn', ip.senton,
-	'receiverEmail',ip.email
-	) as issuance";
-var offerIssuanceSql =
-            $@"(select  
-	   json_build_object(
-	'id',o.id,
-	'number',e.number,
-	'acceptedOn',o.acceptedOn,
-	'acceptedBy',concat_ws(' ',acp.firstname,acp.lastname),
-	'sentOn', p.senton,
-	'issuedOn',p.issuedon,
-	'issuedBy',concat_ws(' ',emp.firstname,emp.lastname) ,  
-	'receiverEmail',p.email
-	)   from domain.offer o 
-	inner join domain.pricing p on p.id = o.estimateid
-	inner join domain.estimate e on e.id = o.estimateid
-	inner join domain.employee emp on emp.id = p.issuerid
-	left join domain.employee acp on acp.id = o.acceptorid
-	where page.numberOfOffers = 1 and o.workid = page.id) as offerissuance";
+                $@"json_build_object(
+	                'invoiceNumber',i.number, 
+	                'isPaid',i.ispaid, 
+	                'dueDays',i.duedays,
+	                'issuedOn',ip.issuedon,
+                    'issuedBy',concat_ws(' ',ii.firstname,ii.lastname) ,
+	                'sentOn', ip.senton,
+	                'receiverEmail',ip.email
+	                ) as issuance";
+                var offerIssuanceSql =
+                 $@"(select  
+	                 json_build_object(
+	                'id',o.id,
+	                'number',e.number,
+	                'acceptedOn',o.acceptedOn,
+	                'acceptedBy',concat_ws(' ',acp.firstname,acp.lastname),
+	                'sentOn', p.senton,
+	                'issuedOn',p.issuedon,
+	                'issuedBy',concat_ws(' ',emp.firstname,emp.lastname) ,  
+	                'receiverEmail',p.email
+	                )   from domain.offer o 
+	                inner join domain.pricing p on p.id = o.estimateid
+	                inner join domain.estimate e on e.id = o.estimateid
+	                inner join domain.employee emp on emp.id = p.issuerid
+	                left join domain.employee acp on acp.id = o.acceptorid
+	                where page.numberOfOffers = 1 and o.workid = page.id) as offerissuance";
 
             var extraJoins = string.Empty;
             if (onlyIssued)
             {
                 extraJoins =
-@"inner join domain.invoice i on i.id = w.invoiceid
-inner join domain.pricing ip on ip.id = i.id
-inner join domain.employee ii on ii.id = ip.issuerid";
+                    @"inner join domain.invoice i on i.id = w.invoiceid
+                    inner join domain.pricing ip on ip.id = i.id
+                    inner join domain.employee ii on ii.id = ip.issuerid";
             }
 
            
@@ -384,45 +387,45 @@ inner join domain.employee ii on ii.id = ip.issuerid";
                query
                  .FilterBy(searchText)
                  .SearchFields(
-@"concat_ws(' ', w.number::text,p.firstname,p.lastname,l.name, v.regnr, v.vin,
-	array_to_string((select array_agg(e.number)   from domain.offer o
-	inner join domain.estimate e on e.id = o.estimateid
-	where workid = w.id ),'/ '),
-	(select number from domain.invoice where id = w.invoiceid))")
+                    @"concat_ws(' ', 
+                        w.number::text,
+                        w.clientname AS clientName,
+                        w.vehicleinfo AS vehicleInfo,
+                        array_to_string((select array_agg(e.number)
+                            from domain.offer o
+                            inner join domain.estimate e on e.id = o.estimateid
+                            where workid = w.id ),'/ '),
+                        (select number from domain.invoice where id = w.invoiceid)
+                    )")
 
                  .SelectSql(
-$@"select *, 
-  case 
-    when invoiceid is not null then 'completed'
-    else LOWER(userstatus)
-  end as status
-   {(!onlyIssued? ","+offerIssuanceSql:string.Empty)}
-from (
- select
-   w.invoiceid, 
-   w.id,
-   w.userstatus,
-   w.number as worknr,   
-   w.startedon ,  
-	{(onlyIssued?issuanceSql: "(select count(*) from domain.offer o where o.workid = w.id)  as numberOfOffers")}, 
-    {(onlyIssued ? string.Empty: "exists (select * from domain.repairjob r where r.workid = w.id)  as hasRepairs,")} 
-    w.clientid,
-    concat_ws(' ',p.firstname,p.lastname,l.name) as clientname,
-    w.vehicleid,
-    v.regnr, 
-	(select string_agg(concat_ws(' ',m.firstname, m.lastname ),'/ ') 
-	   from domain.assignment a 
-		inner join domain.employee m on  a.mechanicid = m.id and a.workid = w.id
-		) as mechanicnames,
-	w.notes  
-     from domain.work w
-         {extraJoins}
-	  left join domain.legalclient l on l.id =  w.clientid
-      left join domain.privateclient p on p.id = w.clientid 
-	  left join domain.vehicle v on v.id = w.vehicleid
-         {query.UseWhereRestriction(false).GetWhereRestriction()}
-	     {query.UsePagingRestriction(false).GetPagingRestriction()} 
-) page").ToResult();
+                    $@"select *, 
+                      case 
+                        when invoiceid is not null then 'completed'
+                        else LOWER(userstatus)
+                      end as status
+                       {(!onlyIssued? ","+offerIssuanceSql:string.Empty)}
+                    from (
+                     select
+                       w.invoiceid, 
+                       w.id,
+                       w.userstatus,
+                       w.number as worknr,   
+                       w.startedon ,  
+	                    {(onlyIssued?issuanceSql: "(select count(*) from domain.offer o where o.workid = w.id)  as numberOfOffers")}, 
+                        {(onlyIssued ? string.Empty: "exists (select * from domain.repairjob r where r.workid = w.id)  as hasRepairs,")} 
+                        w.clientname AS clientName,
+                        w.vehicleinfo AS vehicleInfo,
+	                    (select string_agg(concat_ws(' ',m.firstname, m.lastname ),'/ ') 
+	                       from domain.assignment a 
+		                    inner join domain.employee m on  a.mechanicid = m.id and a.workid = w.id
+		                    ) as mechanicnames,
+	                    w.notes  
+                         from domain.work w
+                             {extraJoins}
+                             {query.UseWhereRestriction(false).GetWhereRestriction()}
+	                         {query.UsePagingRestriction(false).GetPagingRestriction()} 
+                    ) page").ToResult();
         }
         
           
@@ -470,7 +473,24 @@ from (
         {
             var job = session.Get<RepairJob>(jobId);
 
-            var products = model.Select((x, i) => new ProductInstalled(job, Convert.ToInt16(i + 1), x.Code, x.Name, x.Quantity, x.Unit, x.Price, x.Discount, x.Id)).ToArray();
+            var products = model.Select((x, i) =>
+            {
+                var code = string.IsNullOrWhiteSpace(x.Code)
+                    ? CodeGenerator.Generate(x.Name ?? "PRD")
+                    : x.Code;
+
+                return new ProductInstalled(
+                    job,
+                    Convert.ToInt16(i + 1),
+                    code,
+                    x.Name,
+                    x.Quantity,
+                    x.Unit,
+                    x.Price,
+                    x.Discount,
+                    x.Id
+                );
+            }).ToArray();
 
             job.With(products);
 

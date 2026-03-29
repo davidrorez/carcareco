@@ -37,10 +37,10 @@ namespace Carmasters.Core.Domain
         public virtual Estimate CreateFor(int purchaseTax,Offer offer, Employee issuer)
         {
             var newSet = offer.Products.ToArray();
-            ApplyClientInformation(offer.Work.Client);
+            ApplyClientInformation(offer.Work.ClientName);
             if (offer.IsVehicleLinesOnEstimate)
             {
-                ApplyVehicleInformation(offer.Work.Vehicle);
+                ApplyVehicleInformation(offer.Work.VehicleInfo);
             }
             else ApplyVehicleInformation(null);
             IssuedNowBy(issuer);

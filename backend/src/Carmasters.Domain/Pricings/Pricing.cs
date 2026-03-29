@@ -16,26 +16,26 @@ namespace Carmasters.Core.Domain
         protected Pricing() { }
 
          
-        protected Pricing ApplyVehicleInformation(Vehicle vehicle) 
+        protected Pricing ApplyVehicleInformation(string vehicle) 
         {
             if (vehicle == null) 
             {
                 this.VehicleLine1 = this.VehicleLine2 = this.VehicleLine3 = this.VehicleLine4 = String.Empty;
                 return this;
             }
-            this.VehicleLine1 = "Sõiduk: " + vehicle.Producer + " " + vehicle.Model;
-            this.VehicleLine2 =  "Reg nr: " + vehicle.RegNr;
-            this.VehicleLine3 = "Odomeetri näit: " + vehicle.Odo;
-            this.VehicleLine4 = "VIN: " + vehicle.Vin;
+            // this.VehicleLine1 = "Sõiduk: " + vehicle.Producer + " " + vehicle.Model;
+            // this.VehicleLine2 =  "Reg nr: " + vehicle.RegNr;
+            // this.VehicleLine3 = "Odomeetri näit: " + vehicle.Odo;
+            // this.VehicleLine4 = "VIN: " + vehicle.Vin;
             return this;
         }
 
-        protected Pricing ApplyClientInformation(Client client) 
+        protected Pricing ApplyClientInformation(string client)
         {
-            this.Email = client?.CurrentEmail;
-            this.PartyName = client == null ? "eraisik" : client.Name;
-            this.PartyAddress = client?.Address?.ToString();
-             this.PartyCode = client?.RegCode;
+            // this.Email = client?.CurrentEmail;
+            // this.PartyName = client == null ? "eraisik" : client.Name;
+            // this.PartyAddress = client?.Address?.ToString();
+            // this.PartyCode = client?.RegCode;
             return this;
         }
         protected Pricing( Employee issuer,DateTime? sentOn, DateTime? printedOn, string email, string partyName, string partyAddress, string partyCode, string vehicleLine1, string vehicleLine2, string vehicleLine3,string vehicleLine4, DateTime issuedOn, Guid? id = null)

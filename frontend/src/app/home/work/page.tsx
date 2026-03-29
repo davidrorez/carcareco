@@ -106,24 +106,20 @@ export default async function Page(
     },
 
     {
-      dataField: 'clientId',
+      dataField: 'clientName',
       headerText: 'Client',
-      dataFormatter: ({ clientName, clientId }: { clientName: string, clientId: string }) => {
+      dataFormatter: ({ clientName }: { clientName: string }) => {
         return (
-          <a href={'/home/clients/' + clientId} >
-            <h5 >{clientName}</h5>
-          </a>
+          <h5 >{clientName}</h5>
         );
       }
     },
     {
-      dataField: 'vehicleId',
+      dataField: 'vehicleInfo',
       headerText: 'Vehicle',
-      dataFormatter: ({ regNr, vehicleId }: { regNr: string, vehicleId: string }) => {
+      dataFormatter: ({ vehicleInfo }: { vehicleInfo: string }) => {
         return (
-          <a href={'/home/vehicles/' + vehicleId} >
-            <h5 className="mb-0 fs--1">{regNr}</h5>
-          </a>
+          <h5 className="mb-0 fs--1">{vehicleInfo}</h5>
         );
       }
     },

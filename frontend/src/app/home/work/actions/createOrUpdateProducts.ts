@@ -23,21 +23,26 @@ export async function createOrUpdateProducts(formData: FormData) {
     const quantities = formData.getAll('quantity');
     const units = formData.getAll('unit');
     const discount = formData.getAll('discount');
-    const body = ids.map((id,index)=>{
-        if(id.toString().startsWith('-')){
-            //unsaved value
-            id =NIL_UUID;
-        }
-        return {
-            id:id,
-            code:codes[index],
-            name:names[index],
-            price:+prices[index],
-            quantity:+quantities[index],
-            unit:units[index],
-            discount:+discount[index],
-        } as IProduct
-    })
+
+const body = ids.map((id, index) => {
+    if (id.toString().startsWith('-')) {
+        id = NIL_UUID;
+    }
+
+    const price = prices[index] ? +prices[index] : 0;
+    const quantity = quantities[index] ? +quantities[index] : 1;
+    const disc = discount[index] ? +discount[index] : 0;
+
+    return {
+        id: id,
+        code: codes[index] || '',
+        name: names[index] || '',
+        price: isNaN(price) ? 0 : price,
+        quantity: isNaN(quantity) ? 1 : quantity,
+        unit: units[index] || '',
+        discount: isNaN(disc) ? 0 : disc,
+    } as IProduct;
+});
 
      //isVehicelLinesOnPricing
     // const notes = formData.get('notes');
