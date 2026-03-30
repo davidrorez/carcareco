@@ -1,6 +1,6 @@
 import FormInput from "@/_components/FormInput";
-import FormLabel from "@/_components/FormLabel"; 
-import { ClientsCombobox, VehiclesCombobox } from "../../_components/SearchCombobox";
+// import FormLabel from "@/_components/FormLabel"; 
+// import { ClientsCombobox, VehiclesCombobox } from "../../_components/SearchCombobox";
 
 export default function SearchParams({
     options
@@ -27,6 +27,7 @@ export default function SearchParams({
                     <FormInput name="workTo" label="Work to" defaultValue={options.workTo} type="date" ></FormInput>
                   </div>
 
+                  {/*
                   <div className="col-span-1  ">
                     <FormLabel name='clientiId' label='Client'></FormLabel>
                     <ClientsCombobox
@@ -46,6 +47,8 @@ export default function SearchParams({
                       }}>
                     </VehiclesCombobox>
                   </div>  
+
+                  */}
         </div>
     )
 }

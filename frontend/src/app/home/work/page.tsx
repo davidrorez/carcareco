@@ -13,7 +13,7 @@ import SearchStatusFilter from "./_components/SearchStatusFilter";
 import SearchParams from "./_components/SearchParams"; 
 import PrimaryButton from "@/_components/PrimaryButton";
 import SearchInput from "../_components/SearchInput";
-import FormInput from "@/_components/FormInput";
+// import FormInput from "@/_components/FormInput";
 
 export default async function Page(
   { searchParams }: { searchParams: Promise<Record<string, string>> }) {
@@ -166,21 +166,24 @@ export default async function Page(
               }}
               columns={columns}> 
               <div className=" 3xl:flex">
-                 <div className="  grid grid-cols-1  md:grid-cols-12 md:grid-flow-row md:gap-x-2 3xl:grid-flow-col  3xl:grid-cols-24   p-0 3xl:gap-x-2  gap-y-2  "> 
-                      <div className="3xl:col-span-6 md:col-span-7 "   >
+                 <div className="grid grid-cols-1 md:grid-cols-12 md:grid-flow-row md:gap-x-2 3xl:grid-flow-col 3xl:grid-cols-24  p-0 3xl:gap-x-2 gap-y-2"> 
+                      <div className="3xl:col-span-6 md:col-span-12"   >
                         <SearchStatusFilter issued={options.issued === 'on'} status={options.status}></SearchStatusFilter>
                         <SearchInput searchParams={searchParams} placeholder="number, client, vehicle vin or reg nr." ></SearchInput> 
-                      </div> 
-                      <div className="3xl:col-span-4  md:col-span-5 ">
-                         <FormInput name="saleable" label="Product or service" placeholder="code or name ..." defaultValue={options.saleable}  ></FormInput>
                       </div>
+                      {/*
+                        <div className="3xl:col-span-4  md:col-span-5 ">
+                          <FormInput name="saleable" label="Product or service" placeholder="code or name ..." defaultValue={options.saleable}  ></FormInput>
+                        </div>
+                      */} 
+
                       <div  className="3xl:col-span-14  md:col-span-12  " >
                       <SearchParams options={options}></SearchParams>
                       </div>
                       
                   </div> 
                   <div className="mx-2 text-right mt-8">
-                        <PrimaryButton   id="btnSubmit">Search</PrimaryButton>
+                        <PrimaryButton id="btnSubmit">Search</PrimaryButton>
                    </div>
               </div>
                 

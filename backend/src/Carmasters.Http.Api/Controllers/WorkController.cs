@@ -6,6 +6,7 @@ using Carmasters.Core.Application.RateLimiting;
 using Carmasters.Core.Application.Services;
 using Carmasters.Core.Domain;
 using Carmasters.Core.Domain.utils;
+using Carmasters.Core.Domain.Utils;
 using Carmasters.Http.Api.Model;
 using Carmasters.Http.Api.Models;
 using Dapper;
@@ -254,10 +255,10 @@ namespace Carmasters.Http.Api.Controllers
             string status,
             string issued,
             string saleable,
-             DateTime? workForm,
+            DateTime? workFrom,
             DateTime? workTo,
             DateTime? invoiceFrom, 
-            DateTime? invoiceTo )
+            DateTime? invoiceTo)
         {
             var onlyIssued = issued == "on" ;
             // var clientId  = Request.Query["clientiId[value]"].FirstOrDefault();
@@ -289,39 +290,52 @@ namespace Carmasters.Http.Api.Controllers
             }
 
             // if (clientId  != null) query.Where($"w.clientid = '{clientId }'");
-            // if (vehicleId != null ) query.Where($"w.vehicleid = '{vehicleId}' ");
-            if (workForm is not null || workTo is not null)
-            { 
-                var dateRestriction = @" work.startedon {0})";
-                if (invoiceTo is null)
+            // if (vehicleId != null ) query.Where($"w.vehicleid = '{vehicleId}' ");S
+            if (workFrom.HasValue || workTo.HasValue)
+            {
+                string dateRestriction;
+
+                if (workFrom.HasValue && workTo.HasValue)
                 {
-                    dateRestriction = string.Format(dateRestriction, $" >= '{pgDate(invoiceFrom)}'");
+                    var fromUtc = TimeZoneHelper.ToUtc(workFrom.Value.Date);
+                    var toUtc = TimeZoneHelper.ToUtc(workTo.Value.Date.AddDays(1));
+
+                    dateRestriction = $"w.startedon >= '{pgDate(fromUtc)}' AND w.startedon < '{pgDate(toUtc)}'";
                 }
-                else if (invoiceFrom is null)
+                else if (workFrom.HasValue)
                 {
-                    dateRestriction = string.Format(dateRestriction, $" < '{pgDate(invoiceTo)}'");
+                    var fromUtc = TimeZoneHelper.ToUtc(workFrom.Value.Date);
+                    dateRestriction = $"w.startedon >= '{pgDate(fromUtc)}'";
                 }
                 else
                 {
-                    dateRestriction = string.Format(dateRestriction, $" between '{pgDate(invoiceFrom)}' and '{pgDate(invoiceTo)}' ");
+                    var toUtc = TimeZoneHelper.ToUtc(workTo.Value.Date.AddDays(1));
+                    dateRestriction = $"w.startedon < '{pgDate(toUtc)}'";
                 }
+
                 query.Where(dateRestriction);
             }
-            if (workForm is not null || workTo is not null)
-            {
-                var dateRestriction = @" work.startedon {0}";
 
-                if (workTo is null)
+            if (invoiceFrom.HasValue || invoiceTo.HasValue)
+            {
+                string dateRestriction;
+
+                if (invoiceFrom.HasValue && invoiceTo.HasValue)
                 {
-                    dateRestriction = string.Format(dateRestriction, $" >= '{pgDate(workForm)}'");
+                    var fromUtc = TimeZoneHelper.ToUtc(invoiceFrom.Value.Date);
+                    var toUtc = TimeZoneHelper.ToUtc(invoiceTo.Value.Date.AddDays(1));
+
+                    dateRestriction = $"ip.issuedon >= '{pgDate(fromUtc)}' AND ip.issuedon < '{pgDate(toUtc)}'";
                 }
-                else if (workForm is null)
+                else if (invoiceFrom.HasValue)
                 {
-                    dateRestriction = string.Format(dateRestriction, $" < '{pgDate(workTo)}'");
+                    var fromUtc = TimeZoneHelper.ToUtc(invoiceFrom.Value.Date);
+                    dateRestriction = $"ip.issuedon >= '{pgDate(fromUtc)}'";
                 }
                 else
                 {
-                    dateRestriction = string.Format(dateRestriction, $" between '{pgDate(workForm)}' and '{pgDate(workTo)}'");
+                    var toUtc = TimeZoneHelper.ToUtc(invoiceTo.Value.Date.AddDays(1));
+                    dateRestriction = $"ip.issuedon < '{pgDate(toUtc)}'";
                 }
 
                 query.Where(dateRestriction);
@@ -343,7 +357,6 @@ namespace Carmasters.Http.Api.Controllers
                  
                 query.Where(restriction);
             }
-
 
             var issuanceSql =
                 $@"json_build_object(
@@ -389,8 +402,8 @@ namespace Carmasters.Http.Api.Controllers
                  .SearchFields(
                     @"concat_ws(' ', 
                         w.number::text,
-                        w.clientname AS clientName,
-                        w.vehicleinfo AS vehicleInfo,
+                        w.clientname,
+                        w.vehicleinfo,
                         array_to_string((select array_agg(e.number)
                             from domain.offer o
                             inner join domain.estimate e on e.id = o.estimateid
