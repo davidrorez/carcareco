@@ -50,6 +50,29 @@ namespace Carmasters.Http.Api.Controllers
             repository.Update(sparePart);
 
         }
+
+        [Authorize(Policy = "ServerSidePolicy")]
+        [HttpDelete("{id}")]
+        public IActionResult Delete(Guid id)
+        {
+            try
+            {
+                var entity = repository.Get<SparePart>(id);
+
+                if (entity == null)
+                    return NotFound();
+
+                repository.Delete(entity);
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR DELETE: " + ex.Message);
+                return StatusCode(500, "Error deleting spare part");
+            }
+        }
+
         //TODO move custom method without out that are not api methods
         protected override SparePart CreateFrom(SparePartDto model)
         {

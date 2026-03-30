@@ -37,11 +37,6 @@ async function apiCall({
   if (!response.ok) {
     debugger;
     const responseText = await response.text();
-    console.log("API response content type header: " + response.headers.get('Content-Type'));
-    console.log("API threw an exception: " + responseText);
-    console.log(method+' request to: '+fullUrl);
-    console.log('headers: '+JSON.stringify(requestHeaders));
-    console.log('body: '+request.body);
     const hasContentType = response.headers.has('Content-Type');
     let message = 'API Error occurred server side';
     let isUserError = false;

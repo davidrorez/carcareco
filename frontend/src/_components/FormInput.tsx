@@ -18,6 +18,7 @@ export default function FormInput({
     placeholder,
     onInputChange,
     step,
+    readOnly,   
     className,
 }: {
     name: string,
@@ -29,6 +30,7 @@ export default function FormInput({
     placeholder?: string | undefined,
     onInputChange?: IInputOnChange,
     step?: string | undefined,
+    readOnly?: boolean | undefined,
     className?: string | undefined
 }) {
      
@@ -48,7 +50,7 @@ export default function FormInput({
                     onChange={onInputChange}
                     defaultValue={defaultValue}
                     value={value}
-
+                    readOnly={readOnly}
                     placeholder={placeholder}
                     autoComplete={name}
                     aria-invalid={hasError}

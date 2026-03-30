@@ -10,6 +10,7 @@ using NHibernate;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
 using System.Net.Mail;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace Carmasters.Core.Repository.Postgres
     /// <summary>
     /// TODO, transaction handling and separate connection handling .. kinda special case but without multitenancy it should work as normal .. needs to implemented better
     /// </summary>
-    public class UserRepository :  IUserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly DbOptions dbOptions;
         private const string UserSelectQuery =
@@ -102,6 +103,58 @@ namespace Carmasters.Core.Repository.Postgres
                 user.Validated,
                 user.ProfileImage,
                 new UserIdentifier(user.TenantName, user.EmployeeId));
+        }
+
+        public void Add(User user)
+        {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            byte[] profileImage;
+            string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "resources", "default_admin.png");
+
+            if (File.Exists(imagePath))
+            {
+                profileImage = File.ReadAllBytes(imagePath);
+                Console.WriteLine($"Successfully loaded profile image: {profileImage.Length} bytes");
+            }
+            else
+            {
+                Console.WriteLine($"Warning: Profile image not found at {imagePath}");
+                profileImage = new byte[0];
+            }
+
+            using (var connection = CreateConnection(GetUserListDatabase()))
+            {
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        connection.Execute(
+                            @"INSERT INTO public.user
+                                (username, password, tenantname, email, validated, profile_image, employeeid)
+                             VALUES
+                                (@UserName, @Password, @TenantName, @Email, @Validated, @ProfileImage, @EmployeeId)",
+                            new
+                            {
+                                UserName = user.UserName,
+                                Password = user.Password,
+                                TenantName = user.Id.TenantName,
+                                Email = user.Email,
+                                Validated = user.Validated,
+                                ProfileImage = profileImage,
+                                EmployeeId = user.Id.EmployeeId
+                            });
+
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
         }
 
         public void Update(User user)

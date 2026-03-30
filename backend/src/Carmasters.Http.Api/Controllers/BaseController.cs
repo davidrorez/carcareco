@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using AutoMapper;
 using Carmasters.Core;
 using Carmasters.Core.Application;
@@ -49,6 +50,7 @@ namespace Carmasters.Http.Api.Controllers
         [HttpPost]
         public virtual ActionResult Post(MODEL model)
         {
+            Console.WriteLine("EmployeeDto: " + JsonSerializer.Serialize(model));
             var domainObj = CreateFrom(model);
             repository.Add(domainObj);
             AfterSaved(model, domainObj);

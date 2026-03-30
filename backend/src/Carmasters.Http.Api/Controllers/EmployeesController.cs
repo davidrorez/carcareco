@@ -85,27 +85,54 @@ namespace Carmasters.Http.Api.Controllers
         protected override void AfterSaved(EmployeeDto model, Employee domainObj)
         {
             base.AfterSaved(model, domainObj);
-            if (!string.IsNullOrWhiteSpace(model.UserName))
-            {
-                if (string.IsNullOrWhiteSpace(model.Password))
-                {
-                    throw new ArgumentException("Parool sisestamata.");
-                }
-                var user = userRepository.GetBy(model.UserName);
-                if (user != null) throw new ArgumentException("Seda kasutajanime ei saa kasutada.");
+            var user = userRepository.GetBy(model.UserName);
+            if (user != null) throw new ArgumentException("Seda kasutajanime ei saa kasutada.");
 
-                var newUser = NewUser(model, domainObj);
-                userRepository.Update(newUser);
-            }
+            var employeeModel = GenerateUser(model);
+            Console.WriteLine($"Creating user with username: {employeeModel.UserName} and email: {employeeModel.Email}");
+            var newUser = NewUser(employeeModel, domainObj);
+            userRepository.Add(newUser);
         }
-         
+
+        private EmployeeDto GenerateUser(EmployeeDto employee)
+        {
+            var baseUserName = $"{employee.FirstName}{employee.LastName}"
+                .Replace(" ", "")
+                .ToLower();
+
+            var userName = baseUserName;
+            int counter = 1;
+
+            while (userRepository.GetBy(userName) != null)
+            {
+                userName = $"{baseUserName}{counter}";
+                counter++;
+            }
+
+            var email = $"{userName}@email.com";
+            var password = Guid.NewGuid().ToString().Substring(0, 8);
+
+            return new EmployeeDto(
+                employee.FirstName,
+                employee.LastName,
+                employee.Phone,
+                email,
+                employee.Proffession,
+                employee.Description,
+                employee.IntroducedAt,
+                userName,
+                password,
+                employee.Id
+            );
+        }
+
         private User GetUser(Employee domainObj)
         {
             return userRepository.GetBy(new UserIdentifier(this.TenantName(), domainObj.Id));
         }
         private User NewUser(EmployeeDto model, Employee domainObj)
         {
-            return new User(model.UserName, PasswordHasher.getHash(model.Password), model.Email, false, null, new UserIdentifier(this.TenantName(), domainObj.Id));
+            return new User(model.UserName, PasswordHasher.getHash(model.Password), model.Email, true, null, new UserIdentifier(this.TenantName(), domainObj.Id));
         }
         protected override Employee CreateFrom(EmployeeDto model)
         {

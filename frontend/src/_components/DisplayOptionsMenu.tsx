@@ -1,19 +1,29 @@
+'use client'
+
+import { deleteInventory } from '@/app/home/inventory/deleteInventory'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { 
-    ChevronDownIcon,
-    PencilSquareIcon,
-    TrashIcon,
-    PlusCircleIcon
-} from '@heroicons/react/20/solid' 
-import Link from 'next/link'; 
+import {
+  ChevronDownIcon,
+  PencilSquareIcon,
+  TrashIcon,
+  PlusCircleIcon
+} from '@heroicons/react/20/solid'
+import Link from 'next/link'
 
 export default function DisplayOptionsMenu({
-    id,
-    pageName,
-}:{
-    id : string,
-    pageName: string,
-}){
+  id,
+  pageName,
+}: {
+  id: string
+  pageName: string
+}) {
+
+  const handleDelete = async () => {
+    if (!confirm('Are you sure you want to delete?')) return
+
+    await deleteInventory(id)
+
+  }
     return (
         <Menu as="div" className=" relative inline-block text-left">
         <div>
@@ -53,12 +63,13 @@ export default function DisplayOptionsMenu({
             </div>
             <div className="py-1">
                 <MenuItem  >
-                    <Link
-                        href="#"
-                        className="group flex items-center px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden">
-                        <TrashIcon aria-hidden="true" className="mr-3 size-5 text-gray-400 group-data-focus:text-gray-500" />
-                        Delete
-                    </Link>
+                    <button
+                    onClick={handleDelete}
+                    className="flex w-full items-center px-4 py-2 text-sm text-red-600"
+                    >
+                    <TrashIcon className="mr-3 size-5 text-gray-400" />
+                    Delete
+                    </button>
                 </MenuItem> 
             </div>
         </MenuItems>

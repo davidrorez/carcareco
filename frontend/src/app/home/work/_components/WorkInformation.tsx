@@ -3,7 +3,7 @@
 'use client'
 import {  IWorkData } from '../model';
 import { DocumentTextIcon,   TruckIcon, UserCircleIcon, WrenchScrewdriverIcon } from '@heroicons/react/20/solid';
-import moment from 'moment';
+// import moment from 'moment';
 import React from 'react';
 import { startAnActivity } from '../actions/startAnActivity';
 import ButtonGroup, { IButtonOption } from '@/_components/ButtonGroup';
@@ -35,7 +35,12 @@ export function WorkInformation({
     const [date, setDate] = React.useState<string | null>(null);
 
     React.useEffect(() => {
-    setDate(moment(work.startedOn).format('LLL'));
+    setDate(Intl.DateTimeFormat('es-CR', {
+          timeZone: 'America/Costa_Rica',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        }).format(new Date(work.startedOn)));
     }, [work.startedOn]);
 
     const editPath = '/home/work/edit/' + work.id;

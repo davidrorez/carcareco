@@ -1,5 +1,5 @@
 import Search from "../_components/Search";
-import moment from "moment";
+// import moment from "moment";
 import { IOfferIssuance, IWorkIssuance } from "./model";
 import PricingDownloadLink from "./_components/activity/PricingDownloadLink";
 import { ArrowDownTrayIcon } from "@heroicons/react/20/solid";
@@ -97,11 +97,14 @@ export default async function Page(
     secondColumn,
     {
       dataField: 'startedOn',
-      headerText: 'Started on',//  {moment(activity?.startedOn, true).format('LLL')}
+      headerText: 'Started on',
       dataFormatter: ({ startedOn }: { startedOn: Date }) => {
-        return (
-          moment(startedOn, true).format('LL')
-        );
+        return new Intl.DateTimeFormat('es-CR', {
+          timeZone: 'America/Costa_Rica',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        }).format(new Date(startedOn));
       }
     },
 
