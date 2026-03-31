@@ -1,54 +1,29 @@
-import FormInput from "@/_components/FormInput";
-// import FormLabel from "@/_components/FormLabel"; 
-// import { ClientsCombobox, VehiclesCombobox } from "../../_components/SearchCombobox";
+import QueryFormInput from '@/_components/QueryFormInput'
 
 export default function SearchParams({
-    options
-}:{
-    options: any // eslint-disable-line @typescript-eslint/no-explicit-any
-}){
-    return (
-        <div className="grid sm:grid-flow-col gap-2">
-        
-            {options.issued === 'on' && <>
-                <div className="col-span-1  ">
-                        <FormInput name="invoiceFrom" label="Invoice from" defaultValue={options.invoiceFrom} type="date" ></FormInput>
-                      </div>
+  options,
+}: {
+  options: any // eslint-disable-line @typescript-eslint/no-explicit-any
+}) {
+  return (
+    <div className="grid gap-2 sm:grid-flow-col">
+      {options.issued === 'on' && (
+        <>
+          <div className="col-span-1">
+            <QueryFormInput name="invoiceFrom" label="Factura desde" type="date" defaultValue={options.invoiceFrom} />
+          </div>
 
-                      <div className="col-span-1 ">
-                        <FormInput name="invoiceTo" label="Invoice to" defaultValue={options.invoiceTo} type="date" ></FormInput>
-                      </div>
-                  </>  }
-                  <div className="col-span-1  ">
-                    <FormInput name="workFrom" label="Work from" defaultValue={options.workFrom} type="date" ></FormInput>
-                  </div>
-
-                  <div className="col-span-1  ">
-                    <FormInput name="workTo" label="Work to" defaultValue={options.workTo} type="date" ></FormInput>
-                  </div>
-
-                  {/*
-                  <div className="col-span-1  ">
-                    <FormLabel name='clientiId' label='Client'></FormLabel>
-                    <ClientsCombobox
-                      name='clientiId'
-                      defaultValue={{
-                        text: options['clientiId[text]'], 
-                        value: options['clientiId[value]'],
-                      }}>
-                    </ClientsCombobox>
-                  </div>
-                  <div className="col-span-1 ">
-                    <FormLabel name='vehicleId' label='Vehicle'></FormLabel>
-                    <VehiclesCombobox name='vehicleId'
-                      defaultValue={{
-                        text: options['vehicleId[text]'],
-                        value: options['vehicleId[value]'],
-                      }}>
-                    </VehiclesCombobox>
-                  </div>  
-
-                  */}
-        </div>
-    )
+          <div className="col-span-1">
+            <QueryFormInput name="invoiceTo" label="Factura hasta" type="date" defaultValue={options.invoiceTo} />
+          </div>
+        </>
+      )}
+      <div className="col-span-1">
+        <QueryFormInput name="workFrom" label="Trabajo desde" type="date" defaultValue={options.workFrom} />
+      </div>
+      <div className="col-span-1">
+        <QueryFormInput name="workTo" label="Trabajo hasta" type="date" defaultValue={options.workTo} />
+      </div>
+    </div>
+  )
 }

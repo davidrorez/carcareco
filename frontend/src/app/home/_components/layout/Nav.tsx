@@ -8,7 +8,7 @@ const navigationIconClass = 'size-6 shrink-0'
 const navigation = [
   // { name: 'Dashboard', href: '/home', icon: <HomeIcon aria-hidden="true" className={navigationIconClass}></HomeIcon>},
   {
-    name: 'Work',
+    name: 'Trabajo',
     href: '/home/work',
     icon: <QueueListIcon aria-hidden="true" className={navigationIconClass}></QueueListIcon>,
   },
@@ -23,7 +23,7 @@ const navigation = [
     // icon: <TruckIcon aria-hidden="true" className={navigationIconClass}></TruckIcon>,
   //},
   {
-    name: 'Inventory',
+    name: 'Inventario',
     href: '/home/inventory',
     icon: <Cog6ToothIcon aria-hidden="true" className={navigationIconClass}></Cog6ToothIcon>,
   },
@@ -70,13 +70,16 @@ export default function Nav({
           </li>
           {!onSmallScreen && (
             <li className="mb-5 mt-auto flex flex-col">
+              {/*
               <a
                 href="/home/settings"
                 className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-400 hover:bg-gray-800 hover:text-white"
               >
                 <Cog6ToothIcon aria-hidden="true" className="size-6 shrink-0" />
-                Settings
+                Configuración
               </a>
+              */}
+
               <ProfileMenu fullName={fullName} imageUrl={imageUrl} onSmallScreen={false}></ProfileMenu>
             </li>
           )}

@@ -24,12 +24,12 @@ export default function InventoryInput({
           <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             {sparepart?.code && (
               <div className="sm:col-span-2">
-                <FormInput name="code" defaultValue={sparepart.code} label="Product code" readOnly />
+                <FormInput name="code" defaultValue={sparepart.code} label="Código" readOnly />
               </div>
             )}
             <div className="sm:col-span-2">
               {' '}
-              <FormInput name="name" defaultValue={sparepart?.name} label="Product name"></FormInput>
+              <FormInput name="name" defaultValue={sparepart?.name} label="Nombre"></FormInput>
             </div>
             <div className="sm:col-span-2">
               {' '}
@@ -38,7 +38,7 @@ export default function InventoryInput({
                 type="number"
                 step="any"
                 defaultValue={sparepart?.price}
-                label="Price"
+                label="Precio"
               ></FormInput>
             </div>
             <div className="sm:col-span-2">
@@ -48,11 +48,11 @@ export default function InventoryInput({
                 type="number"
                 step="any"
                 defaultValue={sparepart?.quantity}
-                label="Quantity"
+                label="Cantidad"
               ></FormInput>
             </div>
             <div className="sm:col-span-full lg:col-span-4">
-              <FormLabel name="location" label="Location"></FormLabel>
+              <FormLabel name="location" label="Ubicación"></FormLabel>
               <NamedLocation sparepartLocationId={sparepart?.storageId} allLocations={allLocations}></NamedLocation>
             </div>
           </div>
@@ -61,13 +61,13 @@ export default function InventoryInput({
       <div className="border-b border-gray-900/10 pb-12">
         <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div className="col-span-full">
-            <FormTextArea name="about" label="About" defaultValue={sparepart?.description}></FormTextArea>
+            <FormTextArea name="about" label="Descripción" defaultValue={sparepart?.description}></FormTextArea>
           </div>
         </div>
       </div>
       <div className="mt-6 flex items-center justify-end gap-x-6">
-        <SecondaryButton onClick={() => router.back()}>Cancel</SecondaryButton>
-        <PrimaryButton onClick={() => {}}>Save</PrimaryButton>
+        <SecondaryButton onClick={() => router.back()}>Cancelar</SecondaryButton>
+        <PrimaryButton onClick={() => {}}>Guardar</PrimaryButton>
       </div>
     </>
   )

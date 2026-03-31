@@ -26,7 +26,7 @@ export default function Activities({
 }) {
  
   const confirmRemoveActivityRef = React.useRef<ConfirmDialogHandle>(null);
-  const containsRepairJobWithProductsOrServices = activities.items.findIndex(x=>!x.isEmpty && x.name == 'repairjob')>-1;
+  // const containsRepairJobWithProductsOrServices = activities.items.findIndex(x=>!x.isEmpty && x.name == 'repairjob')>-1;
   const items = activities.items??[];
   //todo fix bordering 
   return (
@@ -34,7 +34,7 @@ export default function Activities({
       <ul role="list" className="  mb-0 pb-0   inset-y-0   2xl:w-108">
         <li className='  '>
           <div className="p-5 pb-10">
-            <WorkInformation hasRepairJobWithProductsOrServices={containsRepairJobWithProductsOrServices} work={ work} ></WorkInformation>
+            <WorkInformation work={ work} ></WorkInformation>
           </div>
         </li>
       </ul>

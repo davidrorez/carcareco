@@ -11,7 +11,7 @@ export default async function Page(
   const columns = [
     {
       dataField: 'code',
-      headerText: 'Product code',
+      headerText: 'Código',
       dataFormatter: ({ code, id }: { code: string, id: string }) => {
         return (
           <a href={'/home/inventory/' + id} >
@@ -22,7 +22,7 @@ export default async function Page(
     },
     {
       dataField: 'name',
-      headerText: 'Nimi',
+      headerText: 'Nombre',
       dataFormatter: ({ name }: { name: string }) => {
         return <p title={name} className="truncate" style={{ maxWidth: '500px', marginBottom: "-5px" }} >
           {name}
@@ -31,7 +31,7 @@ export default async function Page(
     },
     {
       dataField: 'price',
-      headerText: 'Price',
+      headerText: 'Precio',
       dataFormatter: ({ price }: { price?: number }) => {
         return (
           <Fragment>
@@ -42,33 +42,22 @@ export default async function Page(
     },
     {
       dataField: 'quantity',
-      headerText: 'Quantity',
-    },
-    {
-      dataField: 'discount',
-      headerText: 'Discount',
-      dataFormatter: ({ discount }: { discount?: number }) => {
-        return (
-          <Fragment>
-            {discount?.toFixed(0)} {discount&&'%'} 
-          </Fragment>
-        )
-      },
+      headerText: 'Cantidad',
     },
     {
       dataField: 'storageName',
-      headerText: 'Location'
+      headerText: 'Ubicación'
     }
   ];
    
   return (
  
       <Main  header={
-        <SearchCardHeader title="Find Inventory" pageName="inventory">
+        <SearchCardHeader title="Inventario" pageName="inventory">
       </SearchCardHeader>
       } narrow={false}>
         <form method="GET" > <Search searchParams={searchParams} pageName="inventory" resourceName="spareparts" columns={columns}>
-          <SimpleSearchBar searchParams={searchParams} placeholder="code or name ..."></SimpleSearchBar>
+          <SimpleSearchBar searchParams={searchParams} placeholder="código o nombre..."></SimpleSearchBar>
           </Search></form>
       </Main> 
   )

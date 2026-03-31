@@ -26,10 +26,10 @@ import { changeWorkStatus } from '../actions/changeWorkStatus';
 
 export function WorkInformation({
     work,
-    hasRepairJobWithProductsOrServices,
+    //hasRepairJobWithProductsOrServices,
 }: {
     work: IWorkData,
-    hasRepairJobWithProductsOrServices: boolean
+    // hasRepairJobWithProductsOrServices: boolean
 }) {
 
     const [date, setDate] = React.useState<string | null>(null);
@@ -54,20 +54,20 @@ export function WorkInformation({
     const deleteWorkRef = React.useRef<ConfirmDialogHandle>(null);
     
     const workMenuOptions = work.issuance ? [] : [
-        { name: 'Make an offer', onClick: async () => { await startAnActivity(work.id, "offer") } },
-        { name: 'Start repair job', onClick: async () => { await startAnActivity(work.id, "repairjob") } },
-        { name: 'Edit', href: editPath },
-        { name: 'Delete', redText:true, onClick:   () => { deleteWorkRef.current?.open({
-            title:'Delete work',description:'Are you sure you want to delete it?',confirmObj:work.id
+        { name: 'Cotización', onClick: async () => { await startAnActivity(work.id, "offer") } },
+        { name: 'Reparación', onClick: async () => { await startAnActivity(work.id, "repairjob") } },
+        { name: 'Editar', href: editPath },
+        { name: 'Eliminar', redText:true, onClick:   () => { deleteWorkRef.current?.open({
+            title:'Eliminar trabajo',description:'¿Estás seguro de que quieres eliminarlo?',confirmObj:work.id
         })  } },
     ] as IButtonOption[];
    
-    workMenuOptions.push({ name: 'Create a copy', onClick: async () => { await createACopy(work.id) } })
+    workMenuOptions.push({ name: 'Crear copia', onClick: async () => { await createACopy(work.id) } })
         ;
 
     const issuedButtonOptions = !work.issuance? []: [
         {
-            name: 'Delete invoice',
+            name: 'Eliminar factura',
             isPrimary:false,
             redText:true,
             inMenu:true,
@@ -91,7 +91,7 @@ export function WorkInformation({
       
         if(work.status!=='closed'){
             editButtonOptions.push({ 
-                name: 'Close',
+                name: 'Marcar como cerrado',
                 onClick: async() => { 
                     await changeWorkStatus(work.id,'Closed');
                 }, 
@@ -99,7 +99,7 @@ export function WorkInformation({
         }
         else if(work.status==='closed'){
             editButtonOptions.push({ 
-                name: 'Open',
+                name: 'Abrir',
                 isPrimary: true,
                 onClick: async() => { 
                     await changeWorkStatus(work.id,'Default');
@@ -107,13 +107,15 @@ export function WorkInformation({
              });
         }
 
+        /*
         if(hasRepairJobWithProductsOrServices && work.status!=='closed' ){
             editButtonOptions.push({
-                name: 'Issue invoice',
+                name: 'Emitir factura',
                 onClick:() => { createInvoiceRef.current?.open() },
                 isPrimary:true 
             });
         }
+        */
        
     }
     
@@ -126,10 +128,10 @@ export function WorkInformation({
                 await deleteWork(work.id) ;
             }} ></ConfirmDialog>
             <div className="lg:col-start-3 lg:row-end-1">
-                <h2 className="sr-only">Summary</h2>
+                <h2 className="sr-only">Resumen</h2>
                 <dl className="flex flex-wrap">
                     <div className="flex-auto xl:pt-6 xl:pl-6">
-                        <dt className="text-base font-semibold text-gray-900 mr-2">Work nr {work.number}{' '}
+                        <dt className="text-base font-semibold text-gray-900 mr-2">Trabajo nr {work.number}{' '}
                             <WorkStatusBadge   status={work.status}></WorkStatusBadge> 
                         </dt>
                         <dd className="text-sm/6 text-gray-500">
@@ -149,7 +151,7 @@ export function WorkInformation({
                     {clientSummary &&
                         <div className="mt-4 flex w-full flex-none gap-x-4 xl:px-6">
                             <dt className="flex-none">
-                                <span className="sr-only">Client</span>
+                                <span className="sr-only">Cliente</span>
                                 <UserCircleIcon aria-hidden="true" className="h-6  w-5 text-gray-400" />
                             </dt>
                             <dd className="text-sm/6 font-medium text-gray-900">
@@ -168,7 +170,7 @@ export function WorkInformation({
                     {work.mechanics?.length > 0 &&
                         <div className="mt-4 flex w-full flex-none gap-x-4 xl:px-6">
                             <dt className="flex-none">
-                                <span className="sr-only">Status</span>
+                                <span className="sr-only">Estado</span>
                                 <WrenchScrewdriverIcon aria-hidden="true" className="h-6 w-5 text-gray-400" />
                             </dt>
                             <dd className="text-sm/6 text-gray-500">{work.mechanics.map((item) => item.name).join(', ')}</dd>
@@ -176,7 +178,7 @@ export function WorkInformation({
                     }
                     {work.notes && <div className="mt-4 flex w-full flex-none gap-x-4 xl:px-6">
                         <dt className="flex-none">
-                            <span className="sr-only">Notes</span>
+                            <span className="sr-only">Notas</span>
                             <DocumentTextIcon aria-hidden="true" className="h-6 w-5 text-gray-400" />
                         </dt>
                         <dd className="text-sm/6 text-gray-500 whitespace-pre-line">{work.notes}</dd>
@@ -201,7 +203,7 @@ export function WorkInformation({
                                >
                                </FormSwitch>
                             <Label as="span" className="ml-3 text-sm"> 
-                                <span className="text-gray-500">Is in progress</span>
+                                <span className="text-gray-500">En curso</span>
                             </Label>
                             </Field> } 
                         </dt>

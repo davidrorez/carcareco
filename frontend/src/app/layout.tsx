@@ -10,10 +10,10 @@ import '@/_styles/tailwind.css'
 export const metadata: Metadata = {
   title: {
     template: '%s', // - B-dec
-    default: 'Repair and maintenance',
+    default: 'Taller ASAG',
   },
   description:
-    'Streamline your car repair business with our all-in-one web app. Track work progress, create jobs, manage services and products, generate offers, issue invoices, and organize your cars and clients effortlessly. Designed to help you save time, boost productivity, and grow your business—your workshop deserves more than just tools; it deserves a partner in success.',
+    'Gestión integral para tu taller de reparación automotriz.',
 }
 
 const inter = Inter({

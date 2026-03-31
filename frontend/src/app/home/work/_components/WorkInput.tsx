@@ -62,7 +62,7 @@ export default function WorkInput({
 
                     <div className="grid grid grid-flow-row grid-cols-1  gap-4">
                         {!work && <div>
-                            <FormLabel name='startWith' label='Start with'></FormLabel>
+                            <FormLabel name='startWith' label='Empezar con'></FormLabel>
                             <Field className="flex mt-2 items-center">
                                 <FormSwitch
                                     name='isOffer'
@@ -72,13 +72,13 @@ export default function WorkInput({
                                     }}></FormSwitch>
 
                                 <Label as="span" className="ml-3 text-sm">
-                                    Offer
+                                    Cotización
                                 </Label>
                             </Field>
                         </div>}
 
                         <div className=" ">
-                            <FormInput name='clientName' defaultValue={work?.clientName} label='Client Name'></FormInput>
+                            <FormInput name='clientName' defaultValue={work?.clientName} label='Nombre cliente'></FormInput>
                             {/*!clientUndisclosed &&
                                 <ClientsCombobox name='clientId'
                                     onItemChange={(item) => {
@@ -99,7 +99,7 @@ export default function WorkInput({
 
                                 <div className="-mr-px grid grow grid-cols-1 focus-within:relative">
                                     <div className="sm:col-span-2   grid grid-cols-1"> 
-                                        <FormInput name='vehicleInfo' defaultValue={work?.vehicleInfo} label='Vehicle Info'></FormInput>
+                                        <FormInput name='vehicleInfo' defaultValue={work?.vehicleInfo} label='Información del vehículo'></FormInput>
                                     </div>
                                 </div>
                             </div>
@@ -107,15 +107,15 @@ export default function WorkInput({
                         </div>
                        <WorkInputMechanics mechanics={mechanics} work={work}></WorkInputMechanics>
                         <div className=" ">
-                            <FormTextArea name='about' rows={8} label='About' defaultValue={work?.notes}>
+                            <FormTextArea name='about' rows={8} label='Detalles' defaultValue={work?.notes}>
                             </FormTextArea>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="mt-6 flex items-center justify-end gap-x-6">
-                <SecondaryButton onClick={() => router.back()}>Cancel</SecondaryButton>
-                <PrimaryButton onClick={() => { }}>Save</PrimaryButton>
+                <SecondaryButton onClick={() => router.back()}>Cancelar</SecondaryButton>
+                <PrimaryButton onClick={() => { }}>Guardar</PrimaryButton>
             </div>
         </>
     )

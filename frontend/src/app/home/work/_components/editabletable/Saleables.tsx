@@ -46,7 +46,7 @@ export default function Saleables({
                                     </th>
                                     */}
                                     <th className="px-2 py-3.5 text-start text-sm font-semibold whitespace-nowrap text-gray-900">
-                                        Name
+                                        Nombre
                                     </th>
                                     {/*
                                     <th className="px-2 py-3.5 text-end  text-sm font-semibold whitespace-nowrap text-gray-900">
@@ -55,7 +55,7 @@ export default function Saleables({
                                     */}
 
                                     <th className="px-2 py-3.5 text-end   text-sm font-semibold whitespace-nowrap text-gray-900">
-                                        Quantity
+                                        Cantidad
                                     </th>
                                     {/*
                                     <th className="px-2 py-3.5 text-end  text-sm font-semibold whitespace-nowrap text-gray-900">

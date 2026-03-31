@@ -117,7 +117,7 @@ const DataItemRow = React.forwardRef<DataItemRowHandle<IProduct>, IDataItemRowPr
                     className={nameStyle}
                     required={true}
                     ref={nameRef}
-                    placeholder="(no value)"
+                    placeholder="Ingresar producto o servicio..."
                     defaultValue={item.name}
                     isEditing={isEditing}
                 >

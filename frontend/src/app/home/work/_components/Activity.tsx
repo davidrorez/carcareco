@@ -47,14 +47,13 @@ export default function Activity({
     const pathEdit = pathCancel + '/edit#items'
     const activityIsOffer = activities.items.find(x => x.id === activities.current.id)?.name == 'offer';
     const editOptions =work.issuance?[]: [
-        { name: 'Add row', onClick: () =>{
+        { name: 'Agregar fila', onClick: () =>{
             addEmptyRow(1);
             setScrollDown(true);
         } },
-        { name: 'Cancel ', href: pathCancel },
-        { name: 'Save', isPrimary: true },
-        { name: 'Apply discount', inMenu: true, onClick: () => applyDiscountsRef.current?.open() },
-        { name: 'Add more rows', inMenu: true, onClick: () =>{
+        { name: 'Cancelar', href: pathCancel },
+        { name: 'Guardar', isPrimary: true },
+        { name: 'Agregar más filas', inMenu: true, onClick: () =>{
             addEmptyRow(5);
             setScrollDown(true);
         } }
@@ -63,44 +62,47 @@ export default function Activity({
     const issued = !!issuance?.issuedOn;
 
     const readOptions =work.issuance?[]: [
-        { name: 'Edit ', isPrimary: true, inMenu:issued, href: pathEdit },
+        { name: 'Editar', isPrimary: true, inMenu:issued, href: pathEdit },
 
     
     ] as IButtonOption[]
+    {/*
     if (!work.issuance  && activityIsOffer) { //if work is not issued/completed we can do stuff with offer
-       
-        const accepted = !!issuance?.acceptedOn;
-        const sent = !!issuance?.sentOn;
-        readOptions[0].isPrimary = false; //if offer is issued, editing is not primary anymore
-        if(data.length > 0) //if there is data something to issue
-        { 
-            readOptions.push({ 
-                name:  (issued?'Reissue offer':'Issue offer'),
-                 inMenu:issued,
-                 isPrimary: !issued, //if not issued, issue is primary this is the next logical step
-                 onClick: () => { issueOfferRef.current?.open() } 
-                } as IButtonOption) 
-        }
-        if(issued){ //if issued, can send offer
-            readOptions.push(
-                {
-                    name: (sent?'Resend offer':'Send offer'),
-                    inMenu:sent,
-                    isPrimary: false,
-                    onClick:()=>{
-                        sendOfferRef.current?.open()
+        
+            const accepted = !!issuance?.acceptedOn;
+            const sent = !!issuance?.sentOn;
+            readOptions[0].isPrimary = false; //if offer is issued, editing is not primary anymore
+            if(data.length > 0) //if there is data something to issue
+            { 
+                readOptions.push({ 
+                    name:  (issued?'Reissue offer':'Issue offer'),
+                    inMenu:issued,
+                    isPrimary: !issued, //if not issued, issue is primary this is the next logical step
+                    onClick: () => { issueOfferRef.current?.open() } 
+                    } as IButtonOption) 
+            }
+            if(issued){ //if issued, can send offer
+                readOptions.push(
+                    {
+                        name: (sent?'Resend offer':'Send offer'),
+                        inMenu:sent,
+                        isPrimary: false,
+                        onClick:()=>{
+                            sendOfferRef.current?.open()
+                        }
                     }
-                }
-            );
-        } 
-        if(issued && !accepted){ //issued but but not accepted
-            readOptions.push({ 
-                name:  'Client accepted' ,
-                 isPrimary: true, 
-                 onClick: () => { offerAcceptedRef.current?.open()   } 
-                } as IButtonOption)
-        } 
-    }
+                );
+            } 
+            if(issued && !accepted){ //issued but but not accepted
+                readOptions.push({ 
+                    name:  'Client accepted' ,
+                    isPrimary: true, 
+                    onClick: () => { offerAcceptedRef.current?.open()   } 
+                    } as IButtonOption)
+            } 
+        }
+    */}
+    
     const addEmptyRow = useCallback((count: number) => {
         for (let i = 1; i <= count; i++) {
             const negValue = data.filter(x=>x.id.startsWith('-')).map(o => +o.id);
