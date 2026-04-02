@@ -317,7 +317,9 @@ namespace Carmasters.Core.Persistence.Postgres.Repositories
             References(x => x.Invoice).Column("invoiceid").Access.BackingField().Cascade.SaveUpdate();
             // References(x => x.Client).Column("clientid").Access.LowerCaseField();
             Map(x => x.ClientName);
+            Map(x => x.ClientPhone);
             Map(x => x.VehicleInfo);
+            Map(x => x.VehiclePlate);
             References(x => x.Starter).Column("starterid").Access.BackingField();
              
             //References(x => x.Vehicle).Column("vehicleid").Access.BackingField(); 

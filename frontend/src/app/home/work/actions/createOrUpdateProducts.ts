@@ -60,7 +60,7 @@ const body = ids.map((id, index) => {
 
     await response.text();
        
-    pushToast(`Products and services updated successfully!`)
+    pushToast(`Actualizado correctamente!`)
 
     redirect(redirectUrl)  
 }

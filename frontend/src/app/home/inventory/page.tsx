@@ -1,33 +1,32 @@
-import { Fragment } from "react";
-import Search from "../_components/Search"; 
-import Main from "../_components/Main"; 
-import { SearchCardHeader } from "../_components/SearchCardHeader";
-import SimpleSearchBar from "../_components/SimpleSearchBar";
+import { Fragment } from 'react'
+import Main from '../_components/Main'
+import Search from '../_components/Search'
+import { SearchCardHeader } from '../_components/SearchCardHeader'
+import SimpleSearchBar from '../_components/SimpleSearchBar'
 
- 
-export default async function Page(
-  { searchParams }: { searchParams: Promise<Record<string, string>> }) {
-
+export default async function Page({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
   const columns = [
     {
       dataField: 'code',
       headerText: 'Código',
-      dataFormatter: ({ code, id }: { code: string, id: string }) => {
+      dataFormatter: ({ code, id }: { code: string; id: string }) => {
         return (
-          <a href={'/home/inventory/' + id} >
-            <h5 className="mb-0 fs--1">{code} </h5>
+          <a href={'/home/inventory/' + id}>
+            <h5 className="fs--1 mb-0">{code} </h5>
           </a>
-        );
-      }
+        )
+      },
     },
     {
       dataField: 'name',
       headerText: 'Nombre',
       dataFormatter: ({ name }: { name: string }) => {
-        return <p title={name} className="truncate" style={{ maxWidth: '500px', marginBottom: "-5px" }} >
-          {name}
-        </p>
-      }
+        return (
+          <p title={name} className="truncate" style={{ maxWidth: '500px', marginBottom: '-5px' }}>
+            {name}
+          </p>
+        )
+      },
     },
     {
       dataField: 'price',
@@ -35,7 +34,7 @@ export default async function Page(
       dataFormatter: ({ price }: { price?: number }) => {
         return (
           <Fragment>
-            {price?.toFixed(2)} {price&&'€'} 
+            {price?.toFixed(2)} {price && '€'}
           </Fragment>
         )
       },
@@ -46,20 +45,20 @@ export default async function Page(
     },
     {
       dataField: 'storageName',
-      headerText: 'Ubicación'
-    }
-  ];
-   
-  return (
- 
-      <Main  header={
-        <SearchCardHeader title="Inventario" pageName="inventory">
-      </SearchCardHeader>
-      } narrow={false}>
-        <form method="GET" > <Search searchParams={searchParams} pageName="inventory" resourceName="spareparts" columns={columns}>
-          <SimpleSearchBar searchParams={searchParams} placeholder="código o nombre..."></SimpleSearchBar>
-          </Search></form>
-      </Main> 
-  )
+      headerText: 'Ubicación',
+    },
+  ]
 
-} 
+  return (
+    <Main
+      header={<SearchCardHeader title="Inventario" pageName="inventory"></SearchCardHeader>}
+      narrow={false}
+    >
+      <form method="GET">
+        <Search searchParams={searchParams} pageName="inventory" resourceName="spareparts" columns={columns}>
+          <SimpleSearchBar searchParams={searchParams} placeholder="código o nombre..."></SimpleSearchBar>
+        </Search>
+      </form>
+    </Main>
+  )
+}

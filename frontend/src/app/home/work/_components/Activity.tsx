@@ -4,8 +4,8 @@ import ButtonGroup, { IButtonOption } from "@/_components/ButtonGroup"
 import ApplyDiscountsDialog from "./activity/ApplyDiscountDialog"
 import IssueOfferDialog from "./activity/IssueOfferDialog"
 import ActivityNotes from "./activity/Notes"
-import Saleables from "./editabletable/Saleables"
-import React, { useCallback, useEffect, useRef, useState } from "react"
+// import Saleables from "./editabletable/Saleables"
+import React, { useEffect, useRef, useState } from "react"
 import { BaseDialogHandle } from "@/_components/BaseDialog"
 import { DataItemRowHandle } from "./editabletable/DataIItemRow"
 import { IActivities, IOfferIssuance, IProduct, IWorkData } from "../model"
@@ -16,14 +16,14 @@ export default function Activity({
     edit,
     work,
     activities,
-    startfresh,
+    //sstartfresh,
     issuance,
 }: {
     edit: boolean,
     issuance?: IOfferIssuance,
     work: IWorkData,
     activities: IActivities,
-    startfresh: boolean
+    //startfresh: boolean
 }) {
 
 
@@ -41,22 +41,22 @@ export default function Activity({
     const issueOfferRef = React.useRef<BaseDialogHandle>(null);
     const offerAcceptedRef = React.useRef<BaseDialogHandle>(null);
     const sendOfferRef = React.useRef<BaseDialogHandle>(null);
-    const [data, setData] = React.useState<IProduct[]>(activities.current.products);
+    // const [data, setData] = React.useState<IProduct[]>(activities.current.products);
     const tableRef = useRef<DataItemRowHandle<IProduct>[] | null[]>([]);
     const pathCancel = `/home/work/${work.id}/${activities.current.id}`
     const pathEdit = pathCancel + '/edit#items'
     const activityIsOffer = activities.items.find(x => x.id === activities.current.id)?.name == 'offer';
     const editOptions =work.issuance?[]: [
-        { name: 'Agregar fila', onClick: () =>{
+        /*{ name: 'Agregar fila', onClick: () =>{
             addEmptyRow(1);
             setScrollDown(true);
-        } },
+        } } */,
         { name: 'Cancelar', href: pathCancel },
         { name: 'Guardar', isPrimary: true },
-        { name: 'Agregar más filas', inMenu: true, onClick: () =>{
+        /*{ name: 'Agregar más filas', inMenu: true, onClick: () =>{
             addEmptyRow(5);
             setScrollDown(true);
-        } }
+        } } */
     ] as IButtonOption[]
 
     const issued = !!issuance?.issuedOn;
@@ -103,31 +103,37 @@ export default function Activity({
         }
     */}
     
-    const addEmptyRow = useCallback((count: number) => {
-        for (let i = 1; i <= count; i++) {
-            const negValue = data.filter(x=>x.id.startsWith('-')).map(o => +o.id);
-            const nextId = (negValue.length>0 ? Math.min(...negValue) : 0)-1 
-            data.push({ id: nextId.toString(), code: '', discount: null, name: '', price: 1, quantity: 1, unit: 'tk' })
-        }
-        setData([...data])
-       
-      }, [data]);
+    /*
+        const addEmptyRow = useCallback((count: number) => {
+            for (let i = 1; i <= count; i++) {
+                const negValue = data.filter(x=>x.id.startsWith('-')).map(o => +o.id);
+                const nextId = (negValue.length>0 ? Math.min(...negValue) : 0)-1 
+                data.push({ id: nextId.toString(), code: '', discount: null, name: '', price: 1, quantity: 1, unit: 'tk' })
+            }
+            setData([...data])
+        
+        }, [data]);
+      */
 
-    
-    const removeItem = (id: string) => {
-        const elementToRemove = data.find(x => x.id == id);
-        if (elementToRemove) {
-            data.splice(data.indexOf(elementToRemove), 1);
-            setData([...data]);
+    /*
+        const removeItem = (id: string) => {
+            const elementToRemove = data.find(x => x.id == id);
+            if (elementToRemove) {
+                data.splice(data.indexOf(elementToRemove), 1);
+                setData([...data]);
+            }
         }
-    }
+    */
  
+   /*
     useEffect(() => {
-        //if empty state button was called add one row, todo
-        if (startfresh && data.length == 0) {
-            addEmptyRow(1);
-        }
-    }, [addEmptyRow, data.length,startfresh])
+            //if empty state button was called add one row, todo
+            if (startfresh && data.length == 0) {
+                addEmptyRow(1);
+            }
+        }, [addEmptyRow, data.length,startfresh])
+    */
+
     return (
         <div className="">
             {activityIsOffer&&<OfferAcceptedDialog  dialogRef={offerAcceptedRef} work={work}  activities={activities}></OfferAcceptedDialog>}
@@ -139,9 +145,11 @@ export default function Activity({
                     <ActivityNotes notes={activities.current.notes} edit={edit} ></ActivityNotes>
                 </div>
             </div>
-            <Saleables
-                edit={edit} data={data} tableRef={tableRef} removeItem={removeItem} refreshData={setData} >
-            </Saleables>
+            {/*
+                <Saleables
+                    edit={edit} data={data} tableRef={tableRef} removeItem={removeItem} refreshData={setData} >
+                </Saleables>
+            */}
             <div className="xl:flex inline-flex float-right xl:items-center">
                 <div className="xl:flex-auto mt-8 inline-flex">
 

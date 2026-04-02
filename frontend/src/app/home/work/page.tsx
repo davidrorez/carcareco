@@ -1,104 +1,22 @@
 import Search from '../_components/Search'
 // import moment from "moment";
-import BlueBadge from '@/_components/BlueBadge'
+// import BlueBadge from '@/_components/BlueBadge'
 import { Card } from '@/_components/Card'
 // import PrimaryButton from '@/_components/PrimaryButton'
-import Spinner from '@/_components/Spinner'
-import { ArrowDownTrayIcon } from '@heroicons/react/20/solid'
+// import Spinner from '@/_components/Spinner'
+// import { ArrowDownTrayIcon } from '@heroicons/react/20/solid'
 import { SearchCardHeader } from '../_components/SearchCardHeader'
 import SearchInput from '../_components/SearchInput'
-import { EmailSentBadge, OverdueBadge } from './_components/activity/badges/IssuanceBadges'
+// import { EmailSentBadge, OverdueBadge } from './_components/activity/badges/IssuanceBadges'
 import WorkStatusBadge from './_components/activity/badges/WorkStatusBadge'
-import PricingDownloadLink from './_components/activity/PricingDownloadLink'
+// import PricingDownloadLink from './_components/activity/PricingDownloadLink'
 import SearchParams from './_components/SearchParams'
 import SearchStatusFilter from './_components/SearchStatusFilter'
-import { IOfferIssuance, IWorkIssuance } from './model'
+// import { IOfferIssuance, IWorkIssuance } from './model'
 // import FormInput from "@/_components/FormInput";
 
 export default async function Page({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
   const options = await searchParams
-
-  const isInvoiceView = options.issued == 'on'
-
-  const secondColumn = isInvoiceView
-    ? {
-        dataField: 'issuance',
-        headerText: 'Factura',
-
-        dataFormatter: ({ issuance, id }: { issuance: IWorkIssuance; id: string }) => {
-          return issuance ? (
-            <div className="flex gap-x-2">
-              <div>
-                {' '}
-                <PricingDownloadLink
-                  name="Invoice"
-                  id={id}
-                  number={issuance.invoiceNumber}
-                  downloadingElement={<Spinner></Spinner>}
-                  hidePaperClip={true}
-                  clickableElement={
-                    <ArrowDownTrayIcon aria-hidden="true" className="h-6 w-5 text-gray-400"></ArrowDownTrayIcon>
-                  }
-                ></PricingDownloadLink>{' '}
-              </div>
-              <div>
-                <EmailSentBadge issueance={issuance}></EmailSentBadge>
-                <OverdueBadge issueance={issuance}></OverdueBadge>
-              </div>
-            </div>
-          ) : (
-            <></>
-          )
-        },
-      }
-    : {
-        dataField: 'offerissuance',
-        headerText: 'Reparación, Cotización',
-
-        dataFormatter: ({
-          offerIssuance,
-          hasRepairs,
-          numberOfOffers,
-        }: {
-          hasRepairs: boolean
-          offerIssuance: IOfferIssuance
-          numberOfOffers: number
-        }) => {
-          return (
-            <div className="flex gap-x-2">
-              {hasRepairs && <BlueBadge text="Reparación"></BlueBadge>}
-              {numberOfOffers > 1 ? (
-                <BlueBadge text="Muchas cotizaciones"></BlueBadge>
-              ) : (
-                <>
-                  {offerIssuance && (
-                    <>
-                      <div>
-                        <PricingDownloadLink
-                          name="Offer"
-                          id={offerIssuance.id}
-                          number={offerIssuance.number}
-                          downloadingElement={<Spinner></Spinner>}
-                          hidePaperClip={true}
-                          hideLabel={false}
-                          clickableElement={
-                            <ArrowDownTrayIcon aria-hidden="true" className="h-6 w-5 text-gray-400"></ArrowDownTrayIcon>
-                          }
-                        ></PricingDownloadLink>
-                      </div>
-                      <div>
-                        <h5>
-                          <EmailSentBadge issueance={offerIssuance}></EmailSentBadge>
-                        </h5>
-                      </div>
-                    </>
-                  )}
-                </>
-              )}
-            </div>
-          )
-        },
-      }
 
   const columns = [
     {
@@ -109,13 +27,13 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
         return (
           <a href={'/home/work/' + id}>
             <h5>
-              Trabajo nr. {workNr} {!isInvoiceView && <WorkStatusBadge status={status}></WorkStatusBadge>}
+              Trabajo nr. {workNr} {<WorkStatusBadge status={status}></WorkStatusBadge>}
             </h5>
           </a>
         )
       },
     },
-    secondColumn,
+    //secondColumn,
     {
       dataField: 'startedOn',
       headerText: 'Fecha inicio',
@@ -137,10 +55,25 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
       },
     },
     {
+      dataField: 'clientPhone',
+      headerText: 'Teléfono',
+      dataFormatter: ({ clientPhone }: { clientPhone: string }) => {
+        return <h5>{clientPhone}</h5>
+      },
+    },
+    {
       dataField: 'vehicleInfo',
       headerText: 'Vehículo',
       dataFormatter: ({ vehicleInfo }: { vehicleInfo: string }) => {
         return <h5 className="fs--1 mb-0">{vehicleInfo}</h5>
+      },
+    },
+
+    {
+      dataField: 'vehiclePlate',
+      headerText: 'Placa',
+      dataFormatter: ({ vehiclePlate }: { vehiclePlate: string }) => {
+        return <h5 className="fs--1 mb-0">{vehiclePlate}</h5>
       },
     },
 
@@ -180,7 +113,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
                   <div className="3xl:grid-flow-col 3xl:grid-cols-24 3xl:gap-x-2 grid grid-cols-1 gap-y-2 p-0 md:grid-flow-row md:grid-cols-12 md:gap-x-2">
                     <div className="3xl:col-span-6 md:col-span-12">
                       <SearchStatusFilter issued={options.issued === 'on'} status={options.status}></SearchStatusFilter>
-                      <SearchInput placeholder="cliente, vehículo...."></SearchInput>
+                      <SearchInput placeholder="cliente, teléfono, vehículo, placa...."></SearchInput>
                     </div>
                     {/*
                         <div className="3xl:col-span-4  md:col-span-5 ">

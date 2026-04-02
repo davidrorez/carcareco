@@ -24,6 +24,7 @@ services:
         condition: service_healthy
 
   api:
+    restart: unless-stopped
     volumes:
       - ./backend/src/Carmasters.Http.Api/appsettings.Secrets.json:/app/appsettings.Secrets.json:ro
     build:
@@ -38,6 +39,7 @@ services:
       - "15567:15567"
 
   web:
+    restart: unless-stopped
     env_file:
       - frontend/.env
     build:
@@ -50,6 +52,7 @@ services:
 
   mailhog:
     image: mailhog/mailhog
+    restart: unless-stopped
     ports:
       - "8025:8025"
 

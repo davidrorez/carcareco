@@ -24,7 +24,7 @@ export default async function Page({
             <CardHeader  > 
                      <h3 className="px-1 text-base font-semibold text-gray-900">Artículo de Inventario</h3> 
                     <DisplayOptionsMenu id={id} pageName='inventory'></DisplayOptionsMenu> 
-            </CardHeader>}>  
+            </CardHeader>} backHref={`/home/inventory`}>  
             <dl className="divide-y divide-gray-100">
                     <DescriptionItem label='Código' value={sparepart.code}></DescriptionItem> 
                     <DescriptionItem label='Nombre' value={sparepart.name}></DescriptionItem>   

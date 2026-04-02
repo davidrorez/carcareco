@@ -5,10 +5,6 @@ import FormTextArea from '@/_components/FormTextArea';
 import PrimaryButton from '@/_components/PrimaryButton';
 import SecondaryButton from '@/_components/SecondaryButton';
 import { IWorkData, IMechanic } from '../model';
-import FormLabel from '@/_components/FormLabel';
-import { useState } from 'react';
-import FormSwitch from '@/_components/FormSwitch';
-import { Field, Label } from '@headlessui/react';
 import FormInput from '@/_components/FormInput';
 import WorkInputMechanics from './WorkInputMechanics';
 
@@ -21,11 +17,9 @@ export default function WorkInput({
     mechanics: IMechanic[]
 }) {
 
-
-
     const router = useRouter()
    
-    const [isOffer, setIsOffer] = useState(false);
+    // const [isOffer, setIsOffer] = useState(false);
 
     // const [onlyClientVehicles, setOnlyClientVehicles] = useState(!work ? true : false);
 
@@ -61,7 +55,7 @@ export default function WorkInput({
                 <div className="border-b  border-gray-900/10 pb-12">
 
                     <div className="grid grid grid-flow-row grid-cols-1  gap-4">
-                        {!work && <div>
+                        {/*!work && <div>
                             <FormLabel name='startWith' label='Empezar con'></FormLabel>
                             <Field className="flex mt-2 items-center">
                                 <FormSwitch
@@ -75,36 +69,40 @@ export default function WorkInput({
                                     Cotización
                                 </Label>
                             </Field>
-                        </div>}
+                        </div>*/}
 
                         <div className=" ">
-                            <FormInput name='clientName' defaultValue={work?.clientName} label='Nombre cliente'></FormInput>
-                            {/*!clientUndisclosed &&
-                                <ClientsCombobox name='clientId'
-                                    onItemChange={(item) => {
-                                        if (onlyClientVehicles && item) {
-                                            populateClientVehicles(item.value);
-                                        }
-                                    }}
-                                    defaultValue={{
-                                        text: work?.clientName ?? '',
-                                        value: work?.clientId ?? '',
-                                    }}>
-                                </ClientsCombobox>*/}
+                            <FormInput
+                                name='clientName'
+                                defaultValue={work?.clientName}
+                                label='Nombre cliente'
+                            /> 
+
+                        </div>
+                        <div className=" ">
+                            <FormInput
+                                name='clientPhone'
+                                defaultValue={work?.clientPhone}
+                                label='Número de teléfono'
+                            /> 
 
                         </div>
                         <div className='  ' >
-
-                            <div className='flex'>
-
-                                <div className="-mr-px grid grow grid-cols-1 focus-within:relative">
-                                    <div className="sm:col-span-2   grid grid-cols-1"> 
-                                        <FormInput name='vehicleInfo' defaultValue={work?.vehicleInfo} label='Información del vehículo'></FormInput>
-                                    </div>
-                                </div>
-                            </div>
-
+                            <FormInput
+                                name='vehicleInfo'
+                                defaultValue={work?.vehicleInfo}
+                                label='Vehículo'
+                            />
                         </div>
+
+                        <div className='  ' >
+                            <FormInput
+                                name='vehiclePlate'
+                                defaultValue={work?.vehiclePlate}
+                                label='Placa del vehículo'
+                            />
+                        </div>
+
                        <WorkInputMechanics mechanics={mechanics} work={work}></WorkInputMechanics>
                         <div className=" ">
                             <FormTextArea name='about' rows={8} label='Detalles' defaultValue={work?.notes}>

@@ -7,7 +7,9 @@ import { redirect } from 'next/navigation'
 export async function createOrUpdate(formData: FormData) {
   const id = formData.get('id')
   const clientName = formData.get('clientName')?.toString() ?? ''
+  const clientPhone = formData.get('clientPhone')?.toString() ?? ''
   const vehicleInfo = formData.get('vehicleInfo')?.toString() ?? ''
+  const vehiclePlate = formData.get('vehiclePlate')?.toString() ?? ''
   // let vehicleId = formData.get('vehicleId');
   //if(formData.get('onlyClientVehicles')=='on'){
   //vehicleId = formData.get('vehicleId[value]');
@@ -19,10 +21,12 @@ export async function createOrUpdate(formData: FormData) {
     description: formData.get('about'),
     // vehicleId: vehicleId??null,
     clientName: clientName,
+    clientPhone: clientPhone,
     vehicleInfo: vehicleInfo,
+    vehiclePlate: vehiclePlate,
     assignedTo: formData.getAll('mechanics'),
     odo: +(formData.get('odo')?.toString() ?? '0'),
-    startWithOffer: formData.get('isOffer') == 'on',
+    startWithOffer: false,
   }
   const url = 'work'
 
@@ -32,7 +36,7 @@ export async function createOrUpdate(formData: FormData) {
 
   const jsonResponse = await response.json()
 
-  pushToast(`Work ${isUpdating ? 'updated' : 'saved'} successfully!`)
+  pushToast(`Trabajo ${isUpdating ? 'actualizado' : 'guardado'} correctamente!`)
 
   if (id) redirect(`/home/work/${jsonResponse}`)
 

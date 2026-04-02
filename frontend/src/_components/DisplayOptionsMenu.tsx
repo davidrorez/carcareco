@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { deleteInventory } from '@/app/home/inventory/deleteInventory'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import {
@@ -9,6 +10,7 @@ import {
   PlusCircleIcon
 } from '@heroicons/react/20/solid'
 import Link from 'next/link'
+import ConfirmDialog, { ConfirmDialogHandle } from './ConfirmDialog'
 
 export default function DisplayOptionsMenu({
   id,
@@ -18,61 +20,67 @@ export default function DisplayOptionsMenu({
   pageName: string
 }) {
 
-  const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete?')) return
+  const confirmRemoveActivityRef = React.useRef<ConfirmDialogHandle>(null);
 
-    await deleteInventory(id)
-
+  const handleDelete = () => {
+    confirmRemoveActivityRef.current?.open({
+      title: "Eliminar",
+      description: "¿Seguro que quieres eliminar este registro?",
+      confirmObj: id
+    })
   }
-    return (
-        <Menu as="div" className=" relative inline-block text-left">
-        <div>
-            <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50">
-                Options
-                <ChevronDownIcon aria-hidden="true" className="-mr-1 size-5 text-gray-400" />
-            </MenuButton>
-        </div>
 
-        <MenuItems
-        modal={false}
-            transition
-            className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white ring-1 shadow-lg ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
-        >
-            <div className="py-1">
-                <MenuItem >
-                    <Link
-                        href={`/home/${pageName}/edit/` + id}
-                        className="group flex items-center px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                    >
-                        <PencilSquareIcon
-                            aria-hidden="true"
-                            className="mr-3 size-5 text-gray-400 group-data-focus:text-gray-500"
-                        />
-                        Edit
-                    </Link>
-                </MenuItem>
-                <MenuItem >
-                    <Link
-                        href={`/home/${pageName}/new`}
-                        className="group flex items-center px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                    >
-                        <PlusCircleIcon aria-hidden="true" className="mr-3 size-5 text-gray-400 group-data-focus:text-gray-500" />
-                        Create new
-                    </Link>
-                </MenuItem>
-            </div>
-            <div className="py-1">
-                <MenuItem  >
-                    <button
-                    onClick={handleDelete}
-                    className="flex w-full items-center px-4 py-2 text-sm text-red-600"
-                    >
-                    <TrashIcon className="mr-3 size-5 text-gray-400" />
-                    Delete
-                    </button>
-                </MenuItem> 
-            </div>
+  return (
+    <>
+      <Menu as="div" className="relative inline-block text-left">
+        <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50">
+          Options
+          <ChevronDownIcon className="-mr-1 size-5 text-gray-400" />
+        </MenuButton>
+
+        <MenuItems className="absolute right-0 z-10 mt-2 w-56 rounded-md bg-white shadow-lg">
+          <div className="py-1">
+            <MenuItem>
+              <Link
+                href={`/home/${pageName}/edit/${id}`}
+                className="flex items-center px-4 py-2 text-sm text-gray-700"
+              >
+                <PencilSquareIcon className="mr-3 size-5 text-gray-400" />
+                Editar
+              </Link>
+            </MenuItem>
+
+            <MenuItem>
+              <Link
+                href={`/home/${pageName}/new`}
+                className="flex items-center px-4 py-2 text-sm text-gray-700"
+              >
+                <PlusCircleIcon className="mr-3 size-5 text-gray-400" />
+                Crear
+              </Link>
+            </MenuItem>
+          </div>
+
+          <div className="py-1">
+            <MenuItem>
+              <button
+                onClick={handleDelete}
+                className="flex w-full items-center px-4 py-2 text-sm text-red-600"
+              >
+                <TrashIcon className="mr-3 size-5 text-gray-400" />
+                Eliminar
+              </button>
+            </MenuItem>
+          </div>
         </MenuItems>
-    </Menu>
-    )
+      </Menu>
+
+      <ConfirmDialog
+        ref={confirmRemoveActivityRef}
+        onConfirm={async (id) => {
+          await deleteInventory(id)
+        }}
+      />
+    </>
+  )
 }

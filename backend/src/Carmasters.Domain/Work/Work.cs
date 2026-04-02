@@ -10,6 +10,7 @@ namespace Carmasters.Core.Domain
     public  class Work : GuidIdentityEntity
     {
         string clientName;
+        string clientPhone;
         IList<Offer> offers = new List<Offer>();
         IList<RepairJob> jobs = new List<RepairJob>();
         private IList<Assignment> assignements = new List<Assignment>(); 
@@ -17,14 +18,16 @@ namespace Carmasters.Core.Domain
         public virtual IReadOnlyCollection<RepairJob> Jobs { get => this.jobs.ToList().AsReadOnly(); }
         public virtual IReadOnlyCollection<Employee> Mechanics => assignements.Select(x => x.Mechanic).ToList().AsReadOnly();
         protected Work() { }
-        public  Work(int number,DateTime startedOn, Employee starter, string clientName = null, string vehicleInfo = null,Invoice invoice = null,string notes = null, int? odo = null, Guid? id = null)
+        public  Work(int number,DateTime startedOn, Employee starter, string clientName = null, string clientPhone = null, string vehicleInfo = null, string vehiclePlate = null,  Invoice invoice = null, string notes = null, int? odo = null, Guid? id = null)
         {
             Id = id.GetValueOrDefault();
             StartedOn = startedOn;
             this.ChangedOn = DateTime.Now;
             this.Starter = starter ?? throw new ArgumentNullException(nameof(starter));
             this.clientName = clientName;
+            this.clientPhone = clientPhone;
             this.VehicleInfo = vehicleInfo;
+            this.VehiclePlate = vehiclePlate;
             this.Notes = notes;
             this.Odo = odo;
             this.Invoice = invoice;
@@ -61,9 +64,9 @@ namespace Carmasters.Core.Domain
         }
          
 
-        public virtual Work CreateCopy( int newNumber,Employee starter)
+        public virtual Work CreateCopy(int newNumber, Employee starter)
         {
-            var work = new Work(newNumber,DateTime.Now,starter,ClientName,VehicleInfo,null,notes:Notes,odo:Odo);
+            var work = new Work(newNumber, DateTime.Now, starter, ClientName, ClientPhone, VehicleInfo, VehiclePlate, null, notes:Notes, odo:Odo);
             foreach (var job in jobs)
             {
                 work.jobs.Add(job.MakeCopy(work, starter));
@@ -122,12 +125,12 @@ namespace Carmasters.Core.Domain
         }
 
        
-        public  static Work Start(ISequnceNumberProviderFactory numberProvider, Employee starter,string clientName = null, string vehicleInfo = null, string notes= null, int? odo = null)
+        public  static Work Start(ISequnceNumberProviderFactory numberProvider, Employee starter, string clientName = null, string clientPhone = null, string vehicleInfo = null, string vehiclePlate = null, string notes= null, int? odo = null)
         {
             var number = numberProvider.
                 GetNumberProvider<Work>().Next();
 
-            return new Work(number,DateTime.Now,starter,clientName,vehicleInfo,null,notes,odo); 
+            return new Work(number, DateTime.Now, starter, clientName, clientPhone, vehicleInfo, vehiclePlate, null, notes, odo); 
         }
 
         public virtual int Number { get; protected set; }
@@ -140,24 +143,28 @@ namespace Carmasters.Core.Domain
 
         public virtual DateTime ChangedOn { get; protected set; } //todo protected and user id too?
 
-        public  virtual string ClientName { get { return clientName; } } 
+        public  virtual string ClientName { get { return clientName; } }
+        public virtual string ClientPhone { get { return clientPhone; } }
         public  virtual string VehicleInfo { get; protected set; }
+        public  virtual string VehiclePlate { get; protected set; }
         public  virtual Invoice Invoice { get; protected set; } 
-        public  virtual void DoneOn(string vehicleInfo)
+        public  virtual void DoneOn(string vehicleInfo, string vehiclePlate)
         {
             this.VehicleInfo = vehicleInfo ?? throw new ArgumentNullException(nameof(vehicleInfo));
+            this.VehiclePlate = vehiclePlate;
         }
         public  virtual void IsForPrivateClient()
         {
             this.clientName = null;
         }
-        public  virtual void IsFor(string client)
+        public  virtual void IsFor(string clientName, string clientPhone)
         {
-            if (client is null)
+            if (clientName is null)
             {
-                throw new ArgumentNullException(nameof(client));
+                throw new ArgumentNullException(nameof(clientName));
             }
-            this.clientName = client;
+            this.clientName = clientName;
+            this.clientPhone = clientPhone;
         }
          
         public  virtual Offer CreateOffer(Employee starter,string notes = null)

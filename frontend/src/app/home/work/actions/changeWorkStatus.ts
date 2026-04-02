@@ -11,7 +11,7 @@ export async function changeWorkStatus(workId: string,status:string) {
         body:{}
     });
     await response.text();
-    pushToast('Status changed successfully.')
+    pushToast('Se cambió el estado correctamente.')
 
     redirect(`/home/work/${workId}`);
 } 

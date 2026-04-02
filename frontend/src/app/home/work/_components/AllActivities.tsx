@@ -51,11 +51,11 @@ export default function Activities({
          
           
           const options =work.issuance?[ ]: [
-            { name: 'Edit' ,href:editRef},
-            { name: 'Delete',onClick:() => {
+            { name: 'Editar' ,href:editRef},
+            { name: 'Eliminar',onClick:() => {
               confirmRemoveActivityRef.current?.open({
                 title: name,
-                description: "Are you sure you want to delete it?",
+                description: "Seguro que quieres eliminarlo?",
                 confirmObj: item
               })
             }}

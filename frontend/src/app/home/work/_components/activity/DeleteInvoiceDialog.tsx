@@ -14,8 +14,8 @@ export default function DeleteInvoiceDialog({
      
     return (
         <BaseDialog ref={dialogRef}
-                title="Delete an invoice"
-                description="Are you sure you want to do this? Only last created invoice can be deleted, otherwise it will fail."
+                title="Eliminar factura"
+                description="Seguro que quieres eliminarlo? Esta acción no se puede deshacer."
                 center={false}
                 yesButtonText="OK"
                 onConfirm={async () => {

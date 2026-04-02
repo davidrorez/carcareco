@@ -39,7 +39,7 @@ export default async function Page() {
                     <DescriptionItem label='VAT Rate' value={options.pricing.invoice.vatRate}></DescriptionItem>
                     <DescriptionItem label='Surcharge' value={options.pricing.invoice.surCharge}></DescriptionItem>
                     <DescriptionItem label='Disclaimer' className="whitespace-pre-line" value={options.pricing.invoice.disclaimer}></DescriptionItem>
-                    <DescriptionItem label='Signature line' value={(options.pricing.invoice.signatureLine?'Yes':'No')}></DescriptionItem>
+                    <DescriptionItem label='Signature line' value={(options.pricing.invoice.signatureLine?'Sí':'No')}></DescriptionItem>
                     <DescriptionItem label='Email content'  className="whitespace-pre-line" value={options.pricing.invoice.emailContent}></DescriptionItem> 
                 </dl>
             </div>
@@ -57,7 +57,7 @@ export default async function Page() {
                     type="button"
                     className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                    Edit
+                    Editar
                 </Link>
             </div>
         </Main>

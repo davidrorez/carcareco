@@ -21,7 +21,7 @@ export async function createOrUpdate(
 
     await response.text();
         
-    pushToast(`Profile updated successfully!`)
+    pushToast(`Perfil actualizado correctamente!`)
 
     redirect('/home/profile') 
 }

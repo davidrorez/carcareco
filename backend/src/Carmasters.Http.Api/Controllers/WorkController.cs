@@ -70,7 +70,9 @@ namespace Carmasters.Http.Api.Controllers
                 IsEmpty = !(work.Jobs.Any(x=>x.Products.Any()) || work.Offers.Any(x=>x.Products.Any())), // todo optimize?
                 // ClientId = work.Client?.Id,
                 work.ClientName,
+                work.ClientPhone,
                 work.VehicleInfo,
+                work.VehiclePlate,
                 // ClientAddress = work.Client?.Address?.ToString(),//TODO
                 // ClientEmail = work.Client?.CurrentEmail,
                 // ClientPhone = work.Client?.Phone,
@@ -156,13 +158,14 @@ namespace Carmasters.Http.Api.Controllers
         [HttpPost]
         public OkObjectResult Post([FromBody]PostOrPutWork model)
         {
-
             var starter = session.Get<Employee>(this.EmployeeId());
             var work = Work.Start(
                 numberProviderFactory,
                 starter,
                 model.ClientName,
+                model.ClientPhone,
                 model.VehicleInfo,
+                model.VehiclePlate,
                 model.StartWithOffer ? null : model.Description,
                 model.Odo);
 
@@ -198,7 +201,7 @@ namespace Carmasters.Http.Api.Controllers
             var work = repository.Get<Work>(id);
             if (model.ClientName is not null)
             {
-                work.IsFor(model.ClientName);
+                work.IsFor(model.ClientName, model.ClientPhone);
             }
             else
             {
@@ -207,7 +210,7 @@ namespace Carmasters.Http.Api.Controllers
 
             if (model.VehicleInfo is not null)
             {
-                work.DoneOn(model.VehicleInfo);
+                work.DoneOn(model.VehicleInfo, model.VehiclePlate);
             }
             else
             {
@@ -403,7 +406,9 @@ namespace Carmasters.Http.Api.Controllers
                     @"concat_ws(' ', 
                         w.number::text,
                         w.clientname,
+                        w.clientphone,
                         w.vehicleinfo,
+                        w.vehicleplate,
                         array_to_string((select array_agg(e.number)
                             from domain.offer o
                             inner join domain.estimate e on e.id = o.estimateid
@@ -428,7 +433,9 @@ namespace Carmasters.Http.Api.Controllers
 	                    {(onlyIssued?issuanceSql: "(select count(*) from domain.offer o where o.workid = w.id)  as numberOfOffers")}, 
                         {(onlyIssued ? string.Empty: "exists (select * from domain.repairjob r where r.workid = w.id)  as hasRepairs,")} 
                         w.clientname AS clientName,
+                        w.clientphone AS clientPhone,
                         w.vehicleinfo AS vehicleInfo,
+                        w.vehicleplate AS vehiclePlate,
 	                    (select string_agg(concat_ws(' ',m.firstname, m.lastname ),'/ ') 
 	                       from domain.assignment a 
 		                    inner join domain.employee m on  a.mechanicid = m.id and a.workid = w.id

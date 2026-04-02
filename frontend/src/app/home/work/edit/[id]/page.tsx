@@ -24,7 +24,7 @@ export default async function Page({
   
 
     return (
-        <Main header={<CardHeader title='Información Trabajo' description='Editar' ></CardHeader>}>
+        <Main header={<CardHeader title='Información Trabajo' description='Editar' ></CardHeader>} backHref={`/home/work`}>
             <form action={createOrUpdate}>
                 <input type="hidden" name='id' value={id} ></input>
                 <WorkInput work={work} mechanics={employees}  ></WorkInput>

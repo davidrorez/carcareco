@@ -87,13 +87,13 @@ export type ConfirmDialogHandle  = {
                     
                     <SecondaryButton
                       onClick={() => setIsDialogOpen(false)}
-                    >Cancel</SecondaryButton>
+                    >Cancelar</SecondaryButton>
                      <PrimaryButton
                      className="inline-flex w-full justify-center" 
                      onClick={() => { 
                         confirm();
                      }}
-                    >Yes
+                    >Confirmar
                     </PrimaryButton>
                 </div>
             </DialogPanel>

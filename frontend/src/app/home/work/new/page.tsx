@@ -13,7 +13,7 @@ export default async function Page() {
     const employees = await response.json() as IMechanic[];
     
     return (
-        <Main header={<CardHeader title='Nuevo trabajo' description='Ingresa detalles' ></CardHeader>}>
+        <Main header={<CardHeader title='Nuevo trabajo' description='Ingresa detalles'  ></CardHeader>} backHref={`/home/work`}>
             <form action={createOrUpdate}>
                 <input type="hidden" name='id'  ></input>
                 <WorkInput mechanics={employees}  ></WorkInput>

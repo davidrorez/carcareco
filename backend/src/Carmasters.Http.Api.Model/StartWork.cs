@@ -16,7 +16,7 @@ namespace Carmasters.Http.Api.Models
         public decimal Price { get; set; }
         public short? Discount { get; set; }
     }
-    public record PostOrPutWork(string ClientName, string Description, string VehicleInfo, Guid[] AssignedTo, int? Odo, bool StartWithOffer);
+    public record PostOrPutWork(string ClientName, string ClientPhone, string Description, string VehicleInfo, string VehiclePlate, Guid[] AssignedTo, int? Odo, bool StartWithOffer);
 
 
     public record WorkPage(
@@ -27,7 +27,9 @@ namespace Carmasters.Http.Api.Models
         string Status,
         string Issued,
         string ClientName,
+        string ClientPhone,
         string VehicleInfo, 
+        string VehiclePlate,
         string RegNr, 
         string MechanicNames, 
         string Notes,  
@@ -36,7 +38,7 @@ namespace Carmasters.Http.Api.Models
         JsonNode OfferIssuance, 
         JsonNode Issuance) 
     {
-        public WorkPage() : this(default,default,default,default,default,default,default,default,default,default,default,default,default,default,default) { }
+        public WorkPage() : this(default, default, default, default,default,default,default,default,default,default,default,default,default,default,default,default,default) { }
     }
 
 }

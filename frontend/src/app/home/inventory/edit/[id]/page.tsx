@@ -26,7 +26,7 @@ export default async function Page({
     return (
         <Main header={
                         <CardHeader title='Artículo de Inventario' description='Editar' >  
-                        </CardHeader>}>
+                        </CardHeader>} backHref={`/home/inventory`}>
                 <form action={createOrUpdate}>
                   <input type="hidden" name='id' value={id}></input>
                     <InventoryInput allLocations={locations} sparepart={sparepart}></InventoryInput>
